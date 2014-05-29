@@ -10,7 +10,7 @@ void argument_expression_list(struct ArgumentExpressionList* node)
 }
 
 
-struct Symbol* primary_expression(struct PrimaryExpression* node)
+struct Symbol* primary_expression(struct PrimaryExpression* node, struct Symbol** orig_symbol)
 {
     struct Symbol* symbol = 0;
     struct Symbol* symbol1 = 0;
@@ -29,24 +29,29 @@ struct Symbol* primary_expression(struct PrimaryExpression* node)
             l = len_gen_type_specifier(symbol1->specifier);
             sprintf(buf, "%d\n", l);
             ADDSTRING(buf);
+            *orig_symbol = symbol;
             return symbol1;
         case 1://INT
             sprintf(buf, "%d", node->iValue);
-            return new_symbol(buf, 0, 1, 1 << 4, 0, 2, 0);
-            break;
+            *orig_symbol = new_symbol(buf, 0, 1, 1 << 4, 0, 2, 0);
+            return *orig_symbol;
         case 2://char
             sprintf(buf, "%d", (int)node->cValue);
-            return new_symbol(buf, 0, 1, 1 << 2, 0, 2, 0);
+            *orig_symbol = new_symbol(buf, 0, 1, 1 << 2, 0, 2, 0);
+            return *orig_symbol;
         case 3://f
             sprintf(buf, "%f", node->fValue);
             return new_symbol(buf, 0, 1, 1 << 6, 0, 2, 0);
         case 4://d
             sprintf(buf, "%lf", node->dValue);
-            return new_symbol(buf, 0, 1, 1 << 7, 0, 2, 0);
+            *orig_symbol = new_symbol(buf, 0, 1, 1 << 7, 0, 2, 0);
+            return *orig_symbol;
         case 5:
-            return new_symbol(node->literal, 0, 1, 1 << 2, 1, 2, 0);
+            *orig_symbol = new_symbol(node->literal, 0, 1, 1 << 2, 1, 2, 0);
+            return *orig_symbol;
         case 6:
-            return expression_func(node->expression);
+            *orig_symbol = expression_func(node->expression);
+            return *orig_symbol;
         default:
             return 0;
     }
@@ -58,8 +63,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
     int i;
     switch (node->type) {
         case 0:
-            *orig_symbol = primary_expression(node->primaryExpression);
-            return *orig_symbol;
+            return primary_expression(node->primaryExpression, orig_symbol);
         case 1:
             symbol = postfix_expression(node->postfixExpression, orig_symbol);
             ref = expression_func(node->expression);
@@ -665,79 +669,87 @@ struct Symbol* assignment_expression(struct AssignmentExpression* node)
     struct Symbol* orig_symbol;
     struct Symbol* symbol2 = assignment_expression(node->assignmentExpression);
     struct Symbol* symbol1 = unary_expression(node->unaryExpression, &orig_symbol);
-    struct Symbol* symbol3 = new_symbol("", symbol2->storage, symbol2->qualifier, symbol2->specifier, symbol2->stars, 0, symbol2->length);
+    struct Symbol* symbol3 = 0;
     int specifier = symbol1->specifier;
-    ADDSTRING("  ");
-    code_gen_symbol('%', symbol3);
-    if ((specifier & (3 << 6)) != 0)
+    
+    if (node->assignmentOperator > 1)
     {
-        ADDSTRING(" = f");
+        symbol3 = new_symbol("", symbol2->storage, symbol2->qualifier, symbol2->specifier, symbol2->stars, 0, symbol2->length);
+        ADDSTRING("  ");
+        code_gen_symbol('%', symbol3);
+        if ((specifier & (3 << 6)) != 0)
+        {
+            ADDSTRING(" = f");
+        }
+        else
+        {
+            ADDSTRING(" = ");
+        }
+        switch (node->assignmentOperator) {
+            case 2:
+                ADDSTRING("mul");
+                break;
+            case 3:
+                ADDSTRING("div");
+                break;
+            case 4:
+                if ((symbol1->specifier & (1 << 9)) > 0)
+                {
+                    ADDSTRING("urem");
+                }
+                else
+                {
+                    ADDSTRING("srem");
+                }
+                break;
+            case 5:
+                ADDSTRING("add");
+                break;
+            case 6:
+                ADDSTRING("sub");
+                break;
+            case 7:
+                ADDSTRING("shl");
+                break;
+            case 8:
+                if ((symbol1->specifier & (1 << 9)) > 0)
+                {
+                    ADDSTRING("lshr");
+                }
+                else
+                {
+                    ADDSTRING("ashr");
+                }
+                break;
+            case 9:
+                ADDSTRING("and");
+                break;
+            case 10:
+                ADDSTRING("xor");
+                break;
+            case 11:
+                ADDSTRING("or");
+                break;
+            default:
+                break;
+        }
+        ADDSTRING(" ");
+        code_gen_type_specifier(symbol1->specifier,0,symbol1->length,symbol1->stars);
+        ADDSTRING(" ");
+        code_gen_symbol('%', symbol1);
+        ADDSTRING(", ");
+        code_gen_symbol('%', symbol2);
+        ADDSTRING("\n");
     }
     else
-    {
-        ADDSTRING(" = ");
-    }
-    switch (node->assignmentOperator) {
-        case 2:
-            ADDSTRING("mul");
-            break;
-        case 3:
-            ADDSTRING("div");
-            break;
-        case 4:
-            if ((symbol1->specifier & (1 << 9)) > 0)
-            {
-                ADDSTRING("urem");
-            }
-            else
-            {
-                ADDSTRING("srem");
-            }
-            break;
-        case 5:
-            ADDSTRING("add");
-            break;
-        case 6:
-            ADDSTRING("sub");
-            break;
-        case 7:
-            ADDSTRING("shl");
-            break;
-        case 8:
-            if ((symbol1->specifier & (1 << 9)) > 0)
-            {
-                ADDSTRING("lshr");
-            }
-            else
-            {
-                ADDSTRING("ashr");
-            }
-            break;
-        case 9:
-            ADDSTRING("and");
-            break;
-        case 10:
-            ADDSTRING("xor");
-            break;
-        case 11:
-            ADDSTRING("or");
-            break;
-        default:
-            break;
-    }
-    code_gen_type_specifier(symbol1->specifier,1,symbol1->length,symbol1->stars);
-    ADDSTRING(" ");
-    code_gen_symbol('%', symbol1);
-    ADDSTRING(", ");
-    code_gen_symbol('%', symbol2);
-    ADDSTRING("\n");
+        symbol3 = symbol2;
     
-    ADDSTRING("store ");
-    code_gen_type_specifier(symbol1->specifier,1,symbol1->length,symbol1->stars);
+    ADDSTRING("  store ");
+    code_gen_type_specifier(symbol1->specifier,0,symbol1->length,symbol1->stars);
     ADDSTRING(" ");
     code_gen_symbol('%', symbol3);
     ADDSTRING(", ");
-    code_gen_type_specifier(symbol1->specifier,1,symbol1->length,symbol1->stars);
+    code_gen_type_specifier(symbol1->specifier,0,symbol1->length,symbol1->stars);
     ADDSTRING("* ");
     code_gen_symbol('%',orig_symbol);
     ADDSTRING(", align ");

@@ -1,7 +1,6 @@
 int main()
 {
-	int k = 'c';
-	float i = k;
-	k = i;
+	int i;
+	i = 4.0;
 	return 3;
 }

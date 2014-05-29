@@ -3,7 +3,7 @@
 
 #include "util.h"
 
-struct Symbol* primary_expression(struct PrimaryExpression* node);
+struct Symbol* primary_expression(struct PrimaryExpression* node, struct Symbol** orig_symbol);
 struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol** orig_symbol);
 struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** orig_symbol);
 struct Symbol* cast_expression(struct CastExpression* node);
