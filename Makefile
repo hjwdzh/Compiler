@@ -1,7 +1,7 @@
-compiler : declaration.o expression.o buffer.o lex.yy.o specify.o statement.o symbol.o util.o y.tab.o
+compiler:	   
 	   lex c.l
 	   yacc -dv c.y
-	   cc *.o -o compiler
+	   cc declaration.c expression.c lex.yy.c specify.c statement.c symbol.c util.c buffer.c y.tab.c -o compiler
 
 declaration: specify.o expression.o
 
@@ -22,4 +22,4 @@ buffer: util.o
 y.tab:
 
 clean:
-	rm *.o compiler *.out y.tab.c lex.yy.c
+	rm compiler y.output
