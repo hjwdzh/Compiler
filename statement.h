@@ -9,4 +9,5 @@ void statement_list(struct StatementList* node);
 void compound_statement(struct CompoundStatement* node);
 void function_definition(struct FunctionDefinition* node);
 void external_declaration(struct ExternalDeclaration* node);
+void translation_unit_begin(struct TranslationUnit* node);
 void translation_unit(struct TranslationUnit* node);

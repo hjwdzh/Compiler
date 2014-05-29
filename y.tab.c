@@ -199,7 +199,7 @@
 #line 1 "c.y"
 
     #include "types.h"
-    
+    #include "statement.h"
     void* node;
 
 
@@ -639,8 +639,8 @@ static const yytype_uint16 yyrline[] =
     1022,  1028,  1038,  1044,  1050,  1059,  1065,  1075,  1081,  1087,
     1093,  1099,  1105,  1114,  1121,  1128,  1137,  1142,  1148,  1154,
     1164,  1170,  1180,  1186,  1196,  1201,  1210,  1217,  1225,  1235,
-    1242,  1249,  1257,  1269,  1275,  1280,  1285,  1290,  1299,  1305,
-    1314,  1320,  1329,  1338,  1346,  1353
+    1242,  1249,  1257,  1269,  1275,  1280,  1285,  1290,  1299,  1306,
+    1316,  1322,  1331,  1340,  1348,  1355
 };
 #endif
 
@@ -2000,7 +2000,7 @@ yyreduce:
         case 2:
 #line 41 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 0;
     ((struct PrimaryExpression*)node)->identifier = (char*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2010,7 +2010,7 @@ yyreduce:
   case 3:
 #line 47 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 1;
     ((struct PrimaryExpression*)node)->iValue = (int)(yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -2020,7 +2020,7 @@ yyreduce:
   case 4:
 #line 53 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 2;
     ((struct PrimaryExpression*)node)->cValue = (char)(yyvsp[(1) - (1)].cValue);
     (yyval.nPtr) = node;
@@ -2030,7 +2030,7 @@ yyreduce:
   case 5:
 #line 59 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 3;
     ((struct PrimaryExpression*)node)->fValue = (float)(yyvsp[(1) - (1)].fValue);
     (yyval.nPtr) = node;
@@ -2040,7 +2040,7 @@ yyreduce:
   case 6:
 #line 65 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 4;
     ((struct PrimaryExpression*)node)->dValue = (double)(yyvsp[(1) - (1)].dValue);
     (yyval.nPtr) = node;
@@ -2050,7 +2050,7 @@ yyreduce:
   case 7:
 #line 71 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 5;
     ((struct PrimaryExpression*)node)->literal = (char*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2060,7 +2060,7 @@ yyreduce:
   case 8:
 #line 77 "c.y"
     {
-    node = malloc(sizeof(struct PrimaryExpression*));
+    node = malloc(sizeof(struct PrimaryExpression));
     ((struct PrimaryExpression*)node)->type = 6;
     ((struct PrimaryExpression*)node)->expression = (struct Expression*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -2070,7 +2070,7 @@ yyreduce:
   case 9:
 #line 86 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 0;
     ((struct PostfixExpression*)node)->primaryExpression = (struct PrimaryExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2080,7 +2080,7 @@ yyreduce:
   case 10:
 #line 92 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 1;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (4)].nPtr);
     ((struct PostfixExpression*)node)->expression = (struct Expression*)(yyvsp[(3) - (4)].nPtr);
@@ -2091,7 +2091,7 @@ yyreduce:
   case 11:
 #line 99 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 2;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -2101,7 +2101,7 @@ yyreduce:
   case 12:
 #line 105 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 3;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (4)].nPtr);
     ((struct PostfixExpression*)node)->argumentExpressionList = (struct ArgumentExpressionList*)(yyvsp[(3) - (4)].nPtr);
@@ -2112,7 +2112,7 @@ yyreduce:
   case 13:
 #line 112 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 4;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct PostfixExpression*)node)->identifier = (char*)(yyvsp[(3) - (3)].nPtr);
@@ -2123,7 +2123,7 @@ yyreduce:
   case 14:
 #line 119 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 5;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct PostfixExpression*)node)->identifier = (char*)(yyvsp[(3) - (3)].nPtr);
@@ -2134,7 +2134,7 @@ yyreduce:
   case 15:
 #line 126 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 6;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -2144,7 +2144,7 @@ yyreduce:
   case 16:
 #line 132 "c.y"
     {
-    node = malloc(sizeof(struct PostfixExpression*));
+    node = malloc(sizeof(struct PostfixExpression));
     ((struct PostfixExpression*)node)->type = 7;
     ((struct PostfixExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -2154,7 +2154,7 @@ yyreduce:
   case 17:
 #line 141 "c.y"
     {
-    node = malloc(sizeof(struct ArgumentExpressionList*));
+    node = malloc(sizeof(struct ArgumentExpressionList));
     ((struct ArgumentExpressionList*)node)->type = 0;
     ((struct ArgumentExpressionList*)node)->assignmentExpression = (struct AssignmentExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2164,7 +2164,7 @@ yyreduce:
   case 18:
 #line 147 "c.y"
     {
-    node = malloc(sizeof(struct ArgumentExpressionList*));
+    node = malloc(sizeof(struct ArgumentExpressionList));
     ((struct ArgumentExpressionList*)node)->type = 1;
     ((struct ArgumentExpressionList*)node)->argumentExpressionList = (struct ArgumentExpressionList*)(yyvsp[(1) - (3)].nPtr);
     ((struct ArgumentExpressionList*)node)->assignmentExpression = (struct AssignmentExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2175,7 +2175,7 @@ yyreduce:
   case 19:
 #line 157 "c.y"
     {
-    node = malloc(sizeof(struct UnaryExpression*));
+    node = malloc(sizeof(struct UnaryExpression));
     ((struct UnaryExpression*)node)->type = 0;
     ((struct UnaryExpression*)node)->postfixExpression = (struct PostfixExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2185,7 +2185,7 @@ yyreduce:
   case 20:
 #line 163 "c.y"
     {
-    node = malloc(sizeof(struct UnaryExpression*));
+    node = malloc(sizeof(struct UnaryExpression));
     ((struct UnaryExpression*)node)->type = 1;
     ((struct UnaryExpression*)node)->unaryExpression = (struct UnaryExpression*)(yyvsp[(2) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -2195,7 +2195,7 @@ yyreduce:
   case 21:
 #line 169 "c.y"
     {
-    node = malloc(sizeof(struct UnaryExpression*));
+    node = malloc(sizeof(struct UnaryExpression));
     ((struct UnaryExpression*)node)->type = 2;
     ((struct UnaryExpression*)node)->unaryExpression = (struct UnaryExpression*)(yyvsp[(2) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -2205,7 +2205,7 @@ yyreduce:
   case 22:
 #line 175 "c.y"
     {
-    node = malloc(sizeof(struct UnaryExpression*));
+    node = malloc(sizeof(struct UnaryExpression));
     ((struct UnaryExpression*)node)->type = 3;
     ((struct UnaryExpression*)node)->unaryOperator = (char)(yyvsp[(1) - (2)].iValue);
     ((struct UnaryExpression*)node)->castExpression = (struct CastExpression*)(yyvsp[(2) - (2)].nPtr);
@@ -2216,7 +2216,7 @@ yyreduce:
   case 23:
 #line 182 "c.y"
     {
-    node = malloc(sizeof(struct UnaryExpression*));
+    node = malloc(sizeof(struct UnaryExpression));
     ((struct UnaryExpression*)node)->type = 4;
     ((struct UnaryExpression*)node)->unaryExpression = (struct UnaryExpression*)(yyvsp[(2) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -2226,7 +2226,7 @@ yyreduce:
   case 24:
 #line 188 "c.y"
     {
-    node = malloc(sizeof(struct UnaryExpression*));
+    node = malloc(sizeof(struct UnaryExpression));
     ((struct UnaryExpression*)node)->type = 5;
     ((struct UnaryExpression*)node)->typeName = (struct TypeName*)(yyvsp[(3) - (4)].nPtr);
     (yyval.nPtr) = node;
@@ -2266,7 +2266,7 @@ yyreduce:
   case 31:
 #line 206 "c.y"
     {
-    node = malloc(sizeof(struct CastExpression*));
+    node = malloc(sizeof(struct CastExpression));
     ((struct CastExpression*)node)->type = 0;
     ((struct CastExpression*)node)->unaryExpression = (struct UnaryExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2276,7 +2276,7 @@ yyreduce:
   case 32:
 #line 212 "c.y"
     {
-    node = malloc(sizeof(struct CastExpression*));
+    node = malloc(sizeof(struct CastExpression));
     ((struct CastExpression*)node)->type = 1;
     ((struct CastExpression*)node)->typeName = (struct TypeName*)(yyvsp[(2) - (4)].nPtr);
     ((struct CastExpression*)node)->castExpression = (struct CastExpression*)(yyvsp[(4) - (4)].nPtr);
@@ -2287,7 +2287,7 @@ yyreduce:
   case 33:
 #line 222 "c.y"
     {
-    node = malloc(sizeof(struct MultiplicativeExpression*));
+    node = malloc(sizeof(struct MultiplicativeExpression));
     ((struct MultiplicativeExpression*)node)->type = 0;
     ((struct MultiplicativeExpression*)node)->castExpression = (struct CastExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2297,7 +2297,7 @@ yyreduce:
   case 34:
 #line 228 "c.y"
     {
-    node = malloc(sizeof(struct MultiplicativeExpression*));
+    node = malloc(sizeof(struct MultiplicativeExpression));
     ((struct MultiplicativeExpression*)node)->type = 1;
     ((struct MultiplicativeExpression*)node)->multiplicativeExpression = (struct MultiplicativeExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct MultiplicativeExpression*)node)->castExpression = (struct CastExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2308,7 +2308,7 @@ yyreduce:
   case 35:
 #line 235 "c.y"
     {
-    node = malloc(sizeof(struct MultiplicativeExpression*));
+    node = malloc(sizeof(struct MultiplicativeExpression));
     ((struct MultiplicativeExpression*)node)->type = 2;
     ((struct MultiplicativeExpression*)node)->multiplicativeExpression = (struct MultiplicativeExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct MultiplicativeExpression*)node)->castExpression = (struct CastExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2319,7 +2319,7 @@ yyreduce:
   case 36:
 #line 242 "c.y"
     {
-    node = malloc(sizeof(struct MultiplicativeExpression*));
+    node = malloc(sizeof(struct MultiplicativeExpression));
     ((struct MultiplicativeExpression*)node)->type = 3;
     ((struct MultiplicativeExpression*)node)->multiplicativeExpression = (struct MultiplicativeExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct MultiplicativeExpression*)node)->castExpression = (struct CastExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2330,7 +2330,7 @@ yyreduce:
   case 37:
 #line 252 "c.y"
     {
-    node = malloc(sizeof(struct AdditiveExpression*));
+    node = malloc(sizeof(struct AdditiveExpression));
     ((struct AdditiveExpression*)node)->type = 0;
     ((struct AdditiveExpression*)node)->multiplicativeExpression = (struct MultiplicativeExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2340,7 +2340,7 @@ yyreduce:
   case 38:
 #line 258 "c.y"
     {
-    node = malloc(sizeof(struct AdditiveExpression*));
+    node = malloc(sizeof(struct AdditiveExpression));
     ((struct AdditiveExpression*)node)->type = 1;
     ((struct AdditiveExpression*)node)->additiveExpression = (struct AdditiveExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct AdditiveExpression*)node)->multiplicativeExpression = (struct MultiplicativeExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2351,7 +2351,7 @@ yyreduce:
   case 39:
 #line 265 "c.y"
     {
-    node = malloc(sizeof(struct AdditiveExpression*));
+    node = malloc(sizeof(struct AdditiveExpression));
     ((struct AdditiveExpression*)node)->type = 2;
     ((struct AdditiveExpression*)node)->additiveExpression = (struct AdditiveExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct AdditiveExpression*)node)->multiplicativeExpression = (struct MultiplicativeExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2362,7 +2362,7 @@ yyreduce:
   case 40:
 #line 275 "c.y"
     {
-    node = malloc(sizeof(struct ShiftExpression*));
+    node = malloc(sizeof(struct ShiftExpression));
     ((struct ShiftExpression*)node)->type = 0;
     ((struct ShiftExpression*)node)->additiveExpression = (struct AdditiveExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2372,7 +2372,7 @@ yyreduce:
   case 41:
 #line 281 "c.y"
     {
-    node = malloc(sizeof(struct ShiftExpression*));
+    node = malloc(sizeof(struct ShiftExpression));
     ((struct ShiftExpression*)node)->type = 1;
     ((struct ShiftExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct ShiftExpression*)node)->additiveExpression = (struct AdditiveExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2383,7 +2383,7 @@ yyreduce:
   case 42:
 #line 288 "c.y"
     {
-    node = malloc(sizeof(struct ShiftExpression*));
+    node = malloc(sizeof(struct ShiftExpression));
     ((struct ShiftExpression*)node)->type = 2;
     ((struct ShiftExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct ShiftExpression*)node)->additiveExpression = (struct AdditiveExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2394,7 +2394,7 @@ yyreduce:
   case 43:
 #line 298 "c.y"
     {
-    node = malloc(sizeof(struct RelationalExpression*));
+    node = malloc(sizeof(struct RelationalExpression));
     ((struct RelationalExpression*)node)->type = 0;
     ((struct RelationalExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2404,7 +2404,7 @@ yyreduce:
   case 44:
 #line 304 "c.y"
     {
-    node = malloc(sizeof(struct RelationalExpression*));
+    node = malloc(sizeof(struct RelationalExpression));
     ((struct RelationalExpression*)node)->type = 1;
     ((struct RelationalExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct RelationalExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2415,7 +2415,7 @@ yyreduce:
   case 45:
 #line 311 "c.y"
     {
-    node = malloc(sizeof(struct RelationalExpression*));
+    node = malloc(sizeof(struct RelationalExpression));
     ((struct RelationalExpression*)node)->type = 2;
     ((struct RelationalExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct RelationalExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2426,7 +2426,7 @@ yyreduce:
   case 46:
 #line 318 "c.y"
     {
-    node = malloc(sizeof(struct RelationalExpression*));
+    node = malloc(sizeof(struct RelationalExpression));
     ((struct RelationalExpression*)node)->type = 3;
     ((struct RelationalExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct RelationalExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2437,7 +2437,7 @@ yyreduce:
   case 47:
 #line 325 "c.y"
     {
-    node = malloc(sizeof(struct RelationalExpression*));
+    node = malloc(sizeof(struct RelationalExpression));
     ((struct RelationalExpression*)node)->type = 4;
     ((struct RelationalExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct RelationalExpression*)node)->shiftExpression = (struct ShiftExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2448,7 +2448,7 @@ yyreduce:
   case 48:
 #line 335 "c.y"
     {
-    node = malloc(sizeof(struct EqualityExpression*));
+    node = malloc(sizeof(struct EqualityExpression));
     ((struct EqualityExpression*)node)->type = 0;
     ((struct EqualityExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2458,7 +2458,7 @@ yyreduce:
   case 49:
 #line 341 "c.y"
     {
-    node = malloc(sizeof(struct EqualityExpression*));
+    node = malloc(sizeof(struct EqualityExpression));
     ((struct EqualityExpression*)node)->type = 1;
     ((struct EqualityExpression*)node)->equalityExpression = (struct EqualityExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct EqualityExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2469,7 +2469,7 @@ yyreduce:
   case 50:
 #line 348 "c.y"
     {
-    node = malloc(sizeof(struct EqualityExpression*));
+    node = malloc(sizeof(struct EqualityExpression));
     ((struct EqualityExpression*)node)->type = 2;
     ((struct EqualityExpression*)node)->equalityExpression = (struct EqualityExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct EqualityExpression*)node)->relationalExpression = (struct RelationalExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2480,7 +2480,7 @@ yyreduce:
   case 51:
 #line 358 "c.y"
     {
-    node = malloc(sizeof(struct AndExpression*));
+    node = malloc(sizeof(struct AndExpression));
     ((struct AndExpression*)node)->type = 0;
     ((struct AndExpression*)node)->equalityExpression = (struct EqualityExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2490,7 +2490,7 @@ yyreduce:
   case 52:
 #line 364 "c.y"
     {
-    node = malloc(sizeof(struct AndExpression*));
+    node = malloc(sizeof(struct AndExpression));
     ((struct AndExpression*)node)->type = 1;
     ((struct AndExpression*)node)->andExpression = (struct AndExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct AndExpression*)node)->equalityExpression = (struct EqualityExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2501,7 +2501,7 @@ yyreduce:
   case 53:
 #line 374 "c.y"
     {
-    node = malloc(sizeof(struct ExclusiveOrExpression*));
+    node = malloc(sizeof(struct ExclusiveOrExpression));
     ((struct ExclusiveOrExpression*)node)->type = 0;
     ((struct ExclusiveOrExpression*)node)->andExpression = (struct AndExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2511,7 +2511,7 @@ yyreduce:
   case 54:
 #line 380 "c.y"
     {
-    node = malloc(sizeof(struct ExclusiveOrExpression*));
+    node = malloc(sizeof(struct ExclusiveOrExpression));
     ((struct ExclusiveOrExpression*)node)->type = 1;
     ((struct ExclusiveOrExpression*)node)->exclusiveOrExpression = (struct ExclusiveOrExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct ExclusiveOrExpression*)node)->andExpression = (struct AndExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2522,7 +2522,7 @@ yyreduce:
   case 55:
 #line 390 "c.y"
     {
-    node = malloc(sizeof(struct InclusiveOrExpression*));
+    node = malloc(sizeof(struct InclusiveOrExpression));
     ((struct InclusiveOrExpression*)node)->type = 0;
     ((struct InclusiveOrExpression*)node)->exclusiveOrExpression = (struct ExclusiveOrExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2532,7 +2532,7 @@ yyreduce:
   case 56:
 #line 396 "c.y"
     {
-    node = malloc(sizeof(struct InclusiveOrExpression*));
+    node = malloc(sizeof(struct InclusiveOrExpression));
     ((struct InclusiveOrExpression*)node)->type = 1;
     ((struct InclusiveOrExpression*)node)->inclusiveOrExpression = (struct InclusiveOrExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct InclusiveOrExpression*)node)->exclusiveOrExpression = (struct ExclusiveOrExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2543,7 +2543,7 @@ yyreduce:
   case 57:
 #line 406 "c.y"
     {
-    node = malloc(sizeof(struct LogicalAndExpression*));
+    node = malloc(sizeof(struct LogicalAndExpression));
     ((struct LogicalAndExpression*)node)->type = 0;
     ((struct LogicalAndExpression*)node)->inclusiveOrExpression = (struct InclusiveOrExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2553,7 +2553,7 @@ yyreduce:
   case 58:
 #line 412 "c.y"
     {
-    node = malloc(sizeof(struct LogicalAndExpression*));
+    node = malloc(sizeof(struct LogicalAndExpression));
     ((struct LogicalAndExpression*)node)->type = 1;
     ((struct LogicalAndExpression*)node)->logicalAndExpression = (struct LogicalAndExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct LogicalAndExpression*)node)->inclusiveOrExpression = (struct InclusiveOrExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2564,7 +2564,7 @@ yyreduce:
   case 59:
 #line 422 "c.y"
     {
-    node = malloc(sizeof(struct LogicalOrExpression*));
+    node = malloc(sizeof(struct LogicalOrExpression));
     ((struct LogicalOrExpression*)node)->type = 0;
     ((struct LogicalOrExpression*)node)->logicalAndExpression = (struct LogicalAndExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2574,7 +2574,7 @@ yyreduce:
   case 60:
 #line 428 "c.y"
     {
-    node = malloc(sizeof(struct LogicalOrExpression*));
+    node = malloc(sizeof(struct LogicalOrExpression));
     ((struct LogicalOrExpression*)node)->type = 1;
     ((struct LogicalOrExpression*)node)->logicalOrExpression = (struct LogicalOrExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct LogicalOrExpression*)node)->logicalAndExpression = (struct LogicalAndExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2585,7 +2585,7 @@ yyreduce:
   case 61:
 #line 438 "c.y"
     {
-    node = malloc(sizeof(struct ConditionalExpression*));
+    node = malloc(sizeof(struct ConditionalExpression));
     ((struct ConditionalExpression*)node)->type = 0;
     ((struct ConditionalExpression*)node)->logicalOrExpression = (struct LogicalOrExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2595,7 +2595,7 @@ yyreduce:
   case 62:
 #line 444 "c.y"
     {
-    node = malloc(sizeof(struct ConditionalExpression*));
+    node = malloc(sizeof(struct ConditionalExpression));
     ((struct ConditionalExpression*)node)->type = 1;
     ((struct ConditionalExpression*)node)->logicalOrExpression = (struct LogicalOrExpression*)(yyvsp[(1) - (5)].nPtr);
     ((struct ConditionalExpression*)node)->expression = (struct Expression*)(yyvsp[(3) - (5)].nPtr);
@@ -2607,7 +2607,7 @@ yyreduce:
   case 63:
 #line 455 "c.y"
     {
-    node = malloc(sizeof(struct AssignmentExpression*));
+    node = malloc(sizeof(struct AssignmentExpression));
     ((struct AssignmentExpression*)node)->type = 0;
     ((struct AssignmentExpression*)node)->conditionalExpression = (struct ConditionalExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2617,7 +2617,7 @@ yyreduce:
   case 64:
 #line 461 "c.y"
     {
-    node = malloc(sizeof(struct AssignmentExpression*));
+    node = malloc(sizeof(struct AssignmentExpression));
     ((struct AssignmentExpression*)node)->type = 1;
     ((struct AssignmentExpression*)node)->unaryExpression = (struct UnaryExpression*)(yyvsp[(1) - (3)].nPtr);
     ((struct AssignmentExpression*)node)->assignmentOperator = (int)(yyvsp[(2) - (3)].iValue);
@@ -2684,7 +2684,7 @@ yyreduce:
   case 76:
 #line 486 "c.y"
     {
-    node = malloc(sizeof(struct Expression*));
+    node = malloc(sizeof(struct Expression));
     ((struct Expression*)node)->type = 0;
     ((struct Expression*)node)->assignmentExpression = (struct AssignmentExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2694,7 +2694,7 @@ yyreduce:
   case 77:
 #line 492 "c.y"
     {
-    node = malloc(sizeof(struct Expression*));
+    node = malloc(sizeof(struct Expression));
     ((struct Expression*)node)->type = 1;
     ((struct Expression*)node)->expression = (struct Expression*)(yyvsp[(1) - (3)].nPtr);
     ((struct Expression*)node)->assignmentExpression = (struct AssignmentExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -2705,7 +2705,7 @@ yyreduce:
   case 78:
 #line 502 "c.y"
     {
-    node = malloc(sizeof(struct ConstantExpression*));
+    node = malloc(sizeof(struct ConstantExpression));
     ((struct ConstantExpression*)node)->type = 0;
     ((struct ConstantExpression*)node)->conditionalExpression = (struct ConditionalExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2715,7 +2715,7 @@ yyreduce:
   case 79:
 #line 511 "c.y"
     {
-    node = malloc(sizeof(struct Declaration*));
+    node = malloc(sizeof(struct Declaration));
     ((struct Declaration*)node)->type = 0;
     ((struct Declaration*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -2725,7 +2725,7 @@ yyreduce:
   case 80:
 #line 517 "c.y"
     {
-    node = malloc(sizeof(struct Declaration*));
+    node = malloc(sizeof(struct Declaration));
     ((struct Declaration*)node)->type = 1;
     ((struct Declaration*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (3)].nPtr);
     ((struct Declaration*)node)->initDeclaratorList = (struct InitDeclaratorList*)(yyvsp[(2) - (3)].nPtr);
@@ -2736,7 +2736,7 @@ yyreduce:
   case 81:
 #line 527 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationSpecifiers*));
+    node = malloc(sizeof(struct DeclarationSpecifiers));
     ((struct DeclarationSpecifiers*)node)->type = 0;
     ((struct DeclarationSpecifiers*)node)->storageClassSpecifier = (yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -2746,7 +2746,7 @@ yyreduce:
   case 82:
 #line 533 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationSpecifiers*));
+    node = malloc(sizeof(struct DeclarationSpecifiers));
     ((struct DeclarationSpecifiers*)node)->type = 1;
     ((struct DeclarationSpecifiers*)node)->storageClassSpecifier = (yyvsp[(1) - (2)].iValue);
     ((struct DeclarationSpecifiers*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(2) - (2)].nPtr);
@@ -2757,7 +2757,7 @@ yyreduce:
   case 83:
 #line 540 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationSpecifiers*));
+    node = malloc(sizeof(struct DeclarationSpecifiers));
     ((struct DeclarationSpecifiers*)node)->type = 2;
     ((struct DeclarationSpecifiers*)node)->typeSpecifier = (int)(yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -2767,7 +2767,7 @@ yyreduce:
   case 84:
 #line 546 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationSpecifiers*));
+    node = malloc(sizeof(struct DeclarationSpecifiers));
     ((struct DeclarationSpecifiers*)node)->type = 3;
     ((struct DeclarationSpecifiers*)node)->typeSpecifier = (int)(yyvsp[(1) - (2)].iValue);
     ((struct DeclarationSpecifiers*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(2) - (2)].nPtr);
@@ -2778,7 +2778,7 @@ yyreduce:
   case 85:
 #line 553 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationSpecifiers*));
+    node = malloc(sizeof(struct DeclarationSpecifiers));
     ((struct DeclarationSpecifiers*)node)->type = 4;
     ((struct DeclarationSpecifiers*)node)->typeQualifier = (int)(yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -2788,7 +2788,7 @@ yyreduce:
   case 86:
 #line 559 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationSpecifiers*));
+    node = malloc(sizeof(struct DeclarationSpecifiers));
     ((struct DeclarationSpecifiers*)node)->type = 5;
     ((struct DeclarationSpecifiers*)node)->typeQualifier = (int)(yyvsp[(1) - (2)].iValue);
     ((struct DeclarationSpecifiers*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(2) - (2)].nPtr);
@@ -2799,7 +2799,7 @@ yyreduce:
   case 87:
 #line 569 "c.y"
     {
-    node = malloc(sizeof(struct InitDeclaratorList*));
+    node = malloc(sizeof(struct InitDeclaratorList));
     ((struct InitDeclaratorList*)node)->type = 0;
     ((struct InitDeclaratorList*)node)->initDeclarator = (struct InitDeclarator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2809,7 +2809,7 @@ yyreduce:
   case 88:
 #line 575 "c.y"
     {
-    node = malloc(sizeof(struct InitDeclaratorList*));
+    node = malloc(sizeof(struct InitDeclaratorList));
     ((struct InitDeclaratorList*)node)->type = 1;
     ((struct InitDeclaratorList*)node)->initDeclaratorList = (struct InitDeclaratorList*)(yyvsp[(1) - (3)].nPtr);
     ((struct InitDeclaratorList*)node)->initDeclarator = (struct InitDeclarator*)(yyvsp[(3) - (3)].nPtr);
@@ -2820,7 +2820,7 @@ yyreduce:
   case 89:
 #line 585 "c.y"
     {
-    node = malloc(sizeof(struct InitDeclarator*));
+    node = malloc(sizeof(struct InitDeclarator));
     ((struct InitDeclarator*)node)->type = 0;
     ((struct InitDeclarator*)node)->declarator = (struct Declarator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2830,7 +2830,7 @@ yyreduce:
   case 90:
 #line 591 "c.y"
     {
-    node = malloc(sizeof(struct InitDeclarator*));
+    node = malloc(sizeof(struct InitDeclarator));
     ((struct InitDeclarator*)node)->type = 1;
     ((struct InitDeclarator*)node)->declarator = (struct Declarator*)(yyvsp[(1) - (3)].nPtr);
     ((struct InitDeclarator*)node)->initializer = (struct Initializer*)(yyvsp[(3) - (3)].nPtr);
@@ -2957,7 +2957,7 @@ yyreduce:
   case 113:
 #line 641 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclarationList*));
+    node = malloc(sizeof(struct StructDeclarationList));
     ((struct StructDeclarationList*)node)->type = 0;
     ((struct StructDeclarationList*)node)->structDeclaration = (struct StructDeclaration*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -2967,7 +2967,7 @@ yyreduce:
   case 114:
 #line 647 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclarationList*));
+    node = malloc(sizeof(struct StructDeclarationList));
     ((struct StructDeclarationList*)node)->type = 1;
     ((struct StructDeclarationList*)node)->structDeclarationList = (struct StructDeclarationList*)(yyvsp[(1) - (2)].nPtr);
     ((struct StructDeclarationList*)node)->structDeclaration = (struct StructDeclaration*)(yyvsp[(2) - (2)].nPtr);
@@ -2978,7 +2978,7 @@ yyreduce:
   case 115:
 #line 657 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclaration*));
+    node = malloc(sizeof(struct StructDeclaration));
     ((struct StructDeclaration*)node)->type = 0;
     ((struct StructDeclaration*)node)->specifierQualifierList = (struct SpecifierQualifierList*)(yyvsp[(1) - (3)].nPtr);
     ((struct StructDeclaration*)node)->structDeclaratorList = (struct StructDeclaratorList*)(yyvsp[(2) - (3)].nPtr);
@@ -2989,7 +2989,7 @@ yyreduce:
   case 116:
 #line 667 "c.y"
     {
-    node = malloc(sizeof(struct SpecifierQualifierList*));
+    node = malloc(sizeof(struct SpecifierQualifierList));
     ((struct SpecifierQualifierList*)node)->type = 0;
     ((struct SpecifierQualifierList*)node)->typeSpecifier = (int)(yyvsp[(1) - (2)].iValue);
     ((struct SpecifierQualifierList*)node)->specifierQualifierList = (struct SpecifierQualifierList*)(yyvsp[(2) - (2)].nPtr);
@@ -3000,7 +3000,7 @@ yyreduce:
   case 117:
 #line 674 "c.y"
     {
-    node = malloc(sizeof(struct SpecifierQualifierList*));
+    node = malloc(sizeof(struct SpecifierQualifierList));
     ((struct SpecifierQualifierList*)node)->type = 1;
     ((struct SpecifierQualifierList*)node)->typeSpecifier = (int)(yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -3010,7 +3010,7 @@ yyreduce:
   case 118:
 #line 680 "c.y"
     {
-    node = malloc(sizeof(struct SpecifierQualifierList*));
+    node = malloc(sizeof(struct SpecifierQualifierList));
     ((struct SpecifierQualifierList*)node)->type = 2;
     ((struct SpecifierQualifierList*)node)->typeQualifier = (int)(yyvsp[(1) - (2)].iValue);
     ((struct SpecifierQualifierList*)node)->specifierQualifierList = (struct SpecifierQualifierList*)(yyvsp[(2) - (2)].nPtr);
@@ -3021,7 +3021,7 @@ yyreduce:
   case 119:
 #line 687 "c.y"
     {
-    node = malloc(sizeof(struct SpecifierQualifierList*));
+    node = malloc(sizeof(struct SpecifierQualifierList));
     ((struct SpecifierQualifierList*)node)->type = 3;
     ((struct SpecifierQualifierList*)node)->typeQualifier = (int)(yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -3031,7 +3031,7 @@ yyreduce:
   case 120:
 #line 696 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclaratorList*));
+    node = malloc(sizeof(struct StructDeclaratorList));
     ((struct StructDeclaratorList*)node)->type = 0;
     ((struct StructDeclaratorList*)node)->structDeclarator = (struct StructDeclarator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3041,7 +3041,7 @@ yyreduce:
   case 121:
 #line 702 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclaratorList*));
+    node = malloc(sizeof(struct StructDeclaratorList));
     ((struct StructDeclaratorList*)node)->type = 1;
     ((struct StructDeclaratorList*)node)->structDeclaratorList = (struct StructDeclaratorList*)(yyvsp[(1) - (3)].nPtr);
     ((struct StructDeclaratorList*)node)->structDeclarator = (struct StructDeclarator*)(yyvsp[(3) - (3)].nPtr);
@@ -3052,7 +3052,7 @@ yyreduce:
   case 122:
 #line 712 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclarator*));
+    node = malloc(sizeof(struct StructDeclarator));
     ((struct StructDeclarator*)node)->type = 0;
     ((struct StructDeclarator*)node)->declarator = (struct Declarator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3062,7 +3062,7 @@ yyreduce:
   case 123:
 #line 718 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclarator*));
+    node = malloc(sizeof(struct StructDeclarator));
     ((struct StructDeclarator*)node)->type = 1;
     ((struct StructDeclarator*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(2) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -3072,7 +3072,7 @@ yyreduce:
   case 124:
 #line 724 "c.y"
     {
-    node = malloc(sizeof(struct StructDeclarator*));
+    node = malloc(sizeof(struct StructDeclarator));
     ((struct StructDeclarator*)node)->type = 2;
     ((struct StructDeclarator*)node)->declarator = (struct Declarator*)(yyvsp[(1) - (3)].nPtr);
     ((struct StructDeclarator*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(3) - (3)].nPtr);
@@ -3098,7 +3098,7 @@ yyreduce:
   case 128:
 #line 740 "c.y"
     {
-    node = malloc(sizeof(struct EnumeratorList*));
+    node = malloc(sizeof(struct EnumeratorList));
     ((struct EnumeratorList*)node)->type = 0;
     ((struct EnumeratorList*)node)->enumerator = (struct Enumerator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3108,7 +3108,7 @@ yyreduce:
   case 129:
 #line 746 "c.y"
     {
-    node = malloc(sizeof(struct EnumeratorList*));
+    node = malloc(sizeof(struct EnumeratorList));
     ((struct EnumeratorList*)node)->type = 1;
     ((struct EnumeratorList*)node)->enumeratorList = (struct EnumeratorList*)(yyvsp[(1) - (3)].nPtr);
     ((struct EnumeratorList*)node)->enumerator = (struct Enumerator*)(yyvsp[(3) - (3)].nPtr);
@@ -3129,7 +3129,7 @@ yyreduce:
   case 134:
 #line 766 "c.y"
     {
-    node = malloc(sizeof(struct Declarator*));
+    node = malloc(sizeof(struct Declarator));
     ((struct Declarator*)node)->type = 0;
     ((struct Declarator*)node)->pointer = (struct Pointer*)(yyvsp[(1) - (2)].nPtr);
     ((struct Declarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(2) - (2)].nPtr);
@@ -3140,7 +3140,7 @@ yyreduce:
   case 135:
 #line 773 "c.y"
     {
-    node = malloc(sizeof(struct Declarator*));
+    node = malloc(sizeof(struct Declarator));
     ((struct Declarator*)node)->type = 1;
     ((struct Declarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3150,7 +3150,7 @@ yyreduce:
   case 136:
 #line 782 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 0;
     ((struct DirectDeclarator*)node)->identifier = (char*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3160,7 +3160,7 @@ yyreduce:
   case 137:
 #line 788 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 1;
     ((struct DirectDeclarator*)node)->declarator = (struct Declarator*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3170,7 +3170,7 @@ yyreduce:
   case 138:
 #line 794 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 2;
     ((struct DirectDeclarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(1) - (4)].nPtr);
     ((struct DirectDeclarator*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(3) - (4)].nPtr);
@@ -3181,7 +3181,7 @@ yyreduce:
   case 139:
 #line 801 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 3;
     ((struct DirectDeclarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(1) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3191,7 +3191,7 @@ yyreduce:
   case 140:
 #line 807 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 4;
     ((struct DirectDeclarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(1) - (4)].nPtr);
     ((struct DirectDeclarator*)node)->parameterTypeList = (struct ParameterTypeList*)(yyvsp[(3) - (4)].nPtr);
@@ -3202,7 +3202,7 @@ yyreduce:
   case 141:
 #line 814 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 5;
     ((struct DirectDeclarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(1) - (4)].nPtr);
     ((struct DirectDeclarator*)node)->identifierList = (struct IdentifierList*)(yyvsp[(3) - (4)].nPtr);
@@ -3213,7 +3213,7 @@ yyreduce:
   case 142:
 #line 821 "c.y"
     {
-    node = malloc(sizeof(struct DirectDeclarator*));
+    node = malloc(sizeof(struct DirectDeclarator));
     ((struct DirectDeclarator*)node)->type = 6;
     ((struct DirectDeclarator*)node)->directDeclarator = (struct DirectDeclarator*)(yyvsp[(1) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3223,7 +3223,7 @@ yyreduce:
   case 143:
 #line 830 "c.y"
     {
-    node = malloc(sizeof(struct Pointer*));
+    node = malloc(sizeof(struct Pointer));
     ((struct Pointer*)node)->type = 0;
     (yyval.nPtr) = node;
 }
@@ -3232,7 +3232,7 @@ yyreduce:
   case 144:
 #line 835 "c.y"
     {
-    node = malloc(sizeof(struct Pointer*));
+    node = malloc(sizeof(struct Pointer));
     ((struct Pointer*)node)->type = 1;
     ((struct Pointer*)node)->typeQualifierList = (struct TypeQualifierList*)(yyvsp[(2) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -3242,7 +3242,7 @@ yyreduce:
   case 145:
 #line 841 "c.y"
     {
-    node = malloc(sizeof(struct Pointer*));
+    node = malloc(sizeof(struct Pointer));
     ((struct Pointer*)node)->type = 2;
     ((struct Pointer*)node)->pointer = (struct Pointer*)(yyvsp[(2) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -3252,7 +3252,7 @@ yyreduce:
   case 146:
 #line 847 "c.y"
     {
-    node = malloc(sizeof(struct Pointer*));
+    node = malloc(sizeof(struct Pointer));
     ((struct Pointer*)node)->type = 3;
     ((struct Pointer*)node)->typeQualifierList = (struct TypeQualifierList*)(yyvsp[(2) - (3)].nPtr);
     ((struct Pointer*)node)->pointer = (struct Pointer*)(yyvsp[(3) - (3)].nPtr);
@@ -3263,7 +3263,7 @@ yyreduce:
   case 147:
 #line 857 "c.y"
     {
-    node = malloc(sizeof(struct TypeQualifierList*));
+    node = malloc(sizeof(struct TypeQualifierList));
     ((struct TypeQualifierList*)node)->type = 0;
     ((struct TypeQualifierList*)node)->typeQualifier = (int)(yyvsp[(1) - (1)].iValue);
     (yyval.nPtr) = node;
@@ -3273,7 +3273,7 @@ yyreduce:
   case 148:
 #line 863 "c.y"
     {
-    node = malloc(sizeof(struct TypeQualifierList*));
+    node = malloc(sizeof(struct TypeQualifierList));
     ((struct TypeQualifierList*)node)->type = 1;
     ((struct TypeQualifierList*)node)->typeQualifierList = (struct TypeQualifierList*)(yyvsp[(1) - (2)].nPtr);
     ((struct TypeQualifierList*)node)->typeQualifier = (int)(yyvsp[(2) - (2)].iValue);
@@ -3284,7 +3284,7 @@ yyreduce:
   case 149:
 #line 873 "c.y"
     {
-    node = malloc(sizeof(struct ParameterTypeList*));
+    node = malloc(sizeof(struct ParameterTypeList));
     ((struct ParameterTypeList*)node)->type = 0;
     ((struct ParameterTypeList*)node)->parameterList = (struct ParameterList*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3294,7 +3294,7 @@ yyreduce:
   case 150:
 #line 879 "c.y"
     {
-    node = malloc(sizeof(struct ParameterTypeList*));
+    node = malloc(sizeof(struct ParameterTypeList));
     ((struct ParameterTypeList*)node)->type = 1;
     ((struct ParameterTypeList*)node)->parameterList = (struct ParameterList*)(yyvsp[(1) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3304,7 +3304,7 @@ yyreduce:
   case 151:
 #line 888 "c.y"
     {
-    node = malloc(sizeof(struct ParameterList*));
+    node = malloc(sizeof(struct ParameterList));
     ((struct ParameterList*)node)->type = 0;
     ((struct ParameterList*)node)->parameterDeclaration = (struct ParameterDeclaration*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3314,7 +3314,7 @@ yyreduce:
   case 152:
 #line 894 "c.y"
     {
-    node = malloc(sizeof(struct ParameterList*));
+    node = malloc(sizeof(struct ParameterList));
     ((struct ParameterList*)node)->type = 1;
     ((struct ParameterList*)node)->parameterList = (struct ParameterList*)(yyvsp[(1) - (3)].nPtr);
     ((struct ParameterList*)node)->parameterDeclaration = (struct ParameterDeclaration*)(yyvsp[(3) - (3)].nPtr);
@@ -3325,7 +3325,7 @@ yyreduce:
   case 153:
 #line 904 "c.y"
     {
-    node = malloc(sizeof(struct ParameterDeclaration*));
+    node = malloc(sizeof(struct ParameterDeclaration));
     ((struct ParameterDeclaration*)node)->type = 0;
     ((struct ParameterDeclaration*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (2)].nPtr);
     ((struct ParameterDeclaration*)node)->declarator = (struct Declarator*)(yyvsp[(2) - (2)].nPtr);
@@ -3336,7 +3336,7 @@ yyreduce:
   case 154:
 #line 911 "c.y"
     {
-    node = malloc(sizeof(struct ParameterDeclaration*));
+    node = malloc(sizeof(struct ParameterDeclaration));
     ((struct ParameterDeclaration*)node)->type = 1;
     ((struct ParameterDeclaration*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (2)].nPtr);
     ((struct ParameterDeclaration*)node)->abstractDeclarator = (struct AbstractDeclarator*)(yyvsp[(2) - (2)].nPtr);
@@ -3347,7 +3347,7 @@ yyreduce:
   case 155:
 #line 918 "c.y"
     {
-    node = malloc(sizeof(struct ParameterDeclaration*));
+    node = malloc(sizeof(struct ParameterDeclaration));
     ((struct ParameterDeclaration*)node)->type = 2;
     ((struct ParameterDeclaration*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3357,7 +3357,7 @@ yyreduce:
   case 156:
 #line 927 "c.y"
     {
-    node = malloc(sizeof(struct IdentifierList*));
+    node = malloc(sizeof(struct IdentifierList));
     ((struct IdentifierList*)node)->type = 0;
     ((struct IdentifierList*)node)->identifier = (char*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3367,7 +3367,7 @@ yyreduce:
   case 157:
 #line 933 "c.y"
     {
-    node = malloc(sizeof(struct IdentifierList*));
+    node = malloc(sizeof(struct IdentifierList));
     ((struct IdentifierList*)node)->type = 1;
     ((struct IdentifierList*)node)->identifierList = (struct IdentifierList*)(yyvsp[(1) - (3)].nPtr);
     ((struct IdentifierList*)node)->identifier = (char*)(yyvsp[(3) - (3)].nPtr);
@@ -3378,7 +3378,7 @@ yyreduce:
   case 158:
 #line 943 "c.y"
     {
-    node = malloc(sizeof(struct TypeName*));
+    node = malloc(sizeof(struct TypeName));
     ((struct TypeName*)node)->type = 0;
     ((struct TypeName*)node)->specifierQualifierList = (struct SpecifierQualifierList*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3388,7 +3388,7 @@ yyreduce:
   case 159:
 #line 949 "c.y"
     {
-    node = malloc(sizeof(struct TypeName*));
+    node = malloc(sizeof(struct TypeName));
     ((struct TypeName*)node)->type = 1;
     ((struct TypeName*)node)->specifierQualifierList = (struct SpecifierQualifierList*)(yyvsp[(1) - (2)].nPtr);
     ((struct TypeName*)node)->abstractDeclarator = (struct AbstractDeclarator*)(yyvsp[(2) - (2)].nPtr);
@@ -3399,7 +3399,7 @@ yyreduce:
   case 160:
 #line 959 "c.y"
     {
-    node = malloc(sizeof(struct AbstractDeclarator*));
+    node = malloc(sizeof(struct AbstractDeclarator));
     ((struct AbstractDeclarator*)node)->type = 0;
     ((struct AbstractDeclarator*)node)->pointer = (struct Pointer*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3409,7 +3409,7 @@ yyreduce:
   case 161:
 #line 965 "c.y"
     {
-    node = malloc(sizeof(struct AbstractDeclarator*));
+    node = malloc(sizeof(struct AbstractDeclarator));
     ((struct AbstractDeclarator*)node)->type = 1;
     ((struct AbstractDeclarator*)node)->directAbstractDeclarator = (struct DirectAbstractDeclarator*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3419,7 +3419,7 @@ yyreduce:
   case 162:
 #line 971 "c.y"
     {
-    node = malloc(sizeof(struct AbstractDeclarator*));
+    node = malloc(sizeof(struct AbstractDeclarator));
     ((struct AbstractDeclarator*)node)->type = 2;
     ((struct AbstractDeclarator*)node)->pointer = (struct Pointer*)(yyvsp[(1) - (2)].nPtr);
     ((struct AbstractDeclarator*)node)->directAbstractDeclarator = (struct DirectAbstractDeclarator*)(yyvsp[(2) - (2)].nPtr);
@@ -3430,7 +3430,7 @@ yyreduce:
   case 163:
 #line 981 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 0;
     ((struct DirectAbstractDeclarator*)node)->abstractDeclarator = (struct AbstractDeclarator*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3440,7 +3440,7 @@ yyreduce:
   case 164:
 #line 987 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 1;
     (yyval.nPtr) = node;
 }
@@ -3449,7 +3449,7 @@ yyreduce:
   case 165:
 #line 992 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 2;
     ((struct DirectAbstractDeclarator*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3459,7 +3459,7 @@ yyreduce:
   case 166:
 #line 998 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 3;
     ((struct DirectAbstractDeclarator*)node)->directAbstractDeclarator = (struct DirectAbstractDeclarator*)(yyvsp[(1) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3469,7 +3469,7 @@ yyreduce:
   case 167:
 #line 1004 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 4;
     ((struct DirectAbstractDeclarator*)node)->directAbstractDeclarator = (struct DirectAbstractDeclarator*)(yyvsp[(1) - (4)].nPtr);
     ((struct DirectAbstractDeclarator*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(3) - (4)].nPtr);
@@ -3480,7 +3480,7 @@ yyreduce:
   case 168:
 #line 1011 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 5;
     (yyval.nPtr) = node;
 }
@@ -3489,7 +3489,7 @@ yyreduce:
   case 169:
 #line 1016 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 6;
     ((struct DirectAbstractDeclarator*)node)->parameterTypeList = (struct ParameterTypeList*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3499,7 +3499,7 @@ yyreduce:
   case 170:
 #line 1022 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 7;
     ((struct DirectAbstractDeclarator*)node)->directAbstractDeclarator = (struct DirectAbstractDeclarator*)(yyvsp[(1) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3509,7 +3509,7 @@ yyreduce:
   case 171:
 #line 1028 "c.y"
     {
-    node = malloc(sizeof(struct DirectAbstractDeclarator*));
+    node = malloc(sizeof(struct DirectAbstractDeclarator));
     ((struct DirectAbstractDeclarator*)node)->type = 8;
     ((struct DirectAbstractDeclarator*)node)->directAbstractDeclarator = (struct DirectAbstractDeclarator*)(yyvsp[(1) - (4)].nPtr);
     ((struct DirectAbstractDeclarator*)node)->parameterTypeList = (struct ParameterTypeList*)(yyvsp[(3) - (4)].nPtr);
@@ -3520,7 +3520,7 @@ yyreduce:
   case 172:
 #line 1038 "c.y"
     {
-    node = malloc(sizeof(struct Initializer*));
+    node = malloc(sizeof(struct Initializer));
     ((struct Initializer*)node)->type = 0;
     ((struct Initializer*)node)->assignmentExpression = (struct AssignmentExpression*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3530,7 +3530,7 @@ yyreduce:
   case 173:
 #line 1044 "c.y"
     {
-    node = malloc(sizeof(struct Initializer*));
+    node = malloc(sizeof(struct Initializer));
     ((struct Initializer*)node)->type = 1;
     ((struct Initializer*)node)->initializerList = (struct InitializerList*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3540,7 +3540,7 @@ yyreduce:
   case 174:
 #line 1050 "c.y"
     {
-    node = malloc(sizeof(struct Initializer*));
+    node = malloc(sizeof(struct Initializer));
     ((struct Initializer*)node)->type = 2;
     ((struct Initializer*)node)->initializerList = (struct InitializerList*)(yyvsp[(2) - (4)].nPtr);
     (yyval.nPtr) = node;
@@ -3550,7 +3550,7 @@ yyreduce:
   case 175:
 #line 1059 "c.y"
     {
-    node = malloc(sizeof(struct InitializerList*));
+    node = malloc(sizeof(struct InitializerList));
     ((struct InitializerList*)node)->type = 0;
     ((struct InitializerList*)node)->initializer = (struct Initializer*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3560,7 +3560,7 @@ yyreduce:
   case 176:
 #line 1065 "c.y"
     {
-    node = malloc(sizeof(struct InitializerList*));
+    node = malloc(sizeof(struct InitializerList));
     ((struct InitializerList*)node)->type = 1;
     ((struct InitializerList*)node)->initializerList = (struct InitializerList*)(yyvsp[(1) - (3)].nPtr);
     ((struct InitializerList*)node)->initializer = (struct Initializer*)(yyvsp[(3) - (3)].nPtr);
@@ -3571,7 +3571,7 @@ yyreduce:
   case 177:
 #line 1075 "c.y"
     {
-    node = malloc(sizeof(struct Statement*));
+    node = malloc(sizeof(struct Statement));
     ((struct Statement*)node)->type = 0;
     ((struct Statement*)node)->labeledStatement = (struct LabeledStatement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3581,7 +3581,7 @@ yyreduce:
   case 178:
 #line 1081 "c.y"
     {
-    node = malloc(sizeof(struct Statement*));
+    node = malloc(sizeof(struct Statement));
     ((struct Statement*)node)->type = 1;
     ((struct Statement*)node)->compoundStatement = (struct CompoundStatement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3591,7 +3591,7 @@ yyreduce:
   case 179:
 #line 1087 "c.y"
     {
-    node = malloc(sizeof(struct Statement*));
+    node = malloc(sizeof(struct Statement));
     ((struct Statement*)node)->type = 2;
     ((struct Statement*)node)->expressionStatement = (struct ExpressionStatement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3601,7 +3601,7 @@ yyreduce:
   case 180:
 #line 1093 "c.y"
     {
-    node = malloc(sizeof(struct Statement*));
+    node = malloc(sizeof(struct Statement));
     ((struct Statement*)node)->type = 3;
     ((struct Statement*)node)->selectionStatement = (struct SelectionStatement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3611,7 +3611,7 @@ yyreduce:
   case 181:
 #line 1099 "c.y"
     {
-    node = malloc(sizeof(struct Statement*));
+    node = malloc(sizeof(struct Statement));
     ((struct Statement*)node)->type = 4;
     ((struct Statement*)node)->iterationStatement = (struct IterationStatement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3621,7 +3621,7 @@ yyreduce:
   case 182:
 #line 1105 "c.y"
     {
-    node = malloc(sizeof(struct Statement*));
+    node = malloc(sizeof(struct Statement));
     ((struct Statement*)node)->type = 5;
     ((struct Statement*)node)->jumpStatement = (struct JumpStatement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3631,7 +3631,7 @@ yyreduce:
   case 183:
 #line 1114 "c.y"
     {
-    node = malloc(sizeof(struct LabeledStatement*));
+    node = malloc(sizeof(struct LabeledStatement));
     ((struct LabeledStatement*)node)->type = 0;
     ((struct LabeledStatement*)node)->identifier = (char*)(yyvsp[(1) - (3)].nPtr);
     ((struct LabeledStatement*)node)->statement = (struct Statement*)(yyvsp[(3) - (3)].nPtr);
@@ -3642,7 +3642,7 @@ yyreduce:
   case 184:
 #line 1121 "c.y"
     {
-    node = malloc(sizeof(struct LabeledStatement*));
+    node = malloc(sizeof(struct LabeledStatement));
     ((struct LabeledStatement*)node)->type = 1;
     ((struct LabeledStatement*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(2) - (4)].nPtr);
     ((struct LabeledStatement*)node)->statement = (struct Statement*)(yyvsp[(4) - (4)].nPtr);
@@ -3653,7 +3653,7 @@ yyreduce:
   case 185:
 #line 1128 "c.y"
     {
-    node = malloc(sizeof(struct LabeledStatement*));
+    node = malloc(sizeof(struct LabeledStatement));
     ((struct LabeledStatement*)node)->type = 2;
     ((struct LabeledStatement*)node)->constantExpression = (struct ConstantExpression*)(yyvsp[(3) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3663,7 +3663,7 @@ yyreduce:
   case 186:
 #line 1137 "c.y"
     {
-    node = malloc(sizeof(struct CompoundStatement*));
+    node = malloc(sizeof(struct CompoundStatement));
     ((struct CompoundStatement*)node)->type = 0;
     (yyval.nPtr) = node;
 }
@@ -3672,7 +3672,7 @@ yyreduce:
   case 187:
 #line 1142 "c.y"
     {
-    node = malloc(sizeof(struct CompoundStatement*));
+    node = malloc(sizeof(struct CompoundStatement));
     ((struct CompoundStatement*)node)->type = 1;
     ((struct CompoundStatement*)node)->statementList = (struct StatementList*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3682,7 +3682,7 @@ yyreduce:
   case 188:
 #line 1148 "c.y"
     {
-    node = malloc(sizeof(struct CompoundStatement*));
+    node = malloc(sizeof(struct CompoundStatement));
     ((struct CompoundStatement*)node)->type = 2;
     ((struct CompoundStatement*)node)->declarationList = (struct DeclarationList*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3692,7 +3692,7 @@ yyreduce:
   case 189:
 #line 1154 "c.y"
     {
-    node = malloc(sizeof(struct CompoundStatement*));
+    node = malloc(sizeof(struct CompoundStatement));
     ((struct CompoundStatement*)node)->type = 3;
     ((struct CompoundStatement*)node)->declarationList = (struct DeclarationList*)(yyvsp[(2) - (4)].nPtr);
     ((struct CompoundStatement*)node)->statementList = (struct StatementList*)(yyvsp[(3) - (4)].nPtr);
@@ -3703,7 +3703,7 @@ yyreduce:
   case 190:
 #line 1164 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationList*));
+    node = malloc(sizeof(struct DeclarationList));
     ((struct DeclarationList*)node)->type = 0;
     ((struct DeclarationList*)node)->declaration = (struct Declaration*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3713,7 +3713,7 @@ yyreduce:
   case 191:
 #line 1170 "c.y"
     {
-    node = malloc(sizeof(struct DeclarationList*));
+    node = malloc(sizeof(struct DeclarationList));
     ((struct DeclarationList*)node)->type = 1;
     ((struct DeclarationList*)node)->declarationList = (struct DeclarationList*)(yyvsp[(1) - (2)].nPtr);
     ((struct DeclarationList*)node)->declaration = (struct Declaration*)(yyvsp[(2) - (2)].nPtr);
@@ -3724,7 +3724,7 @@ yyreduce:
   case 192:
 #line 1180 "c.y"
     {
-    node = malloc(sizeof(struct StatementList*));
+    node = malloc(sizeof(struct StatementList));
     ((struct StatementList*)node)->type = 0;
     ((struct StatementList*)node)->statement = (struct Statement*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3734,7 +3734,7 @@ yyreduce:
   case 193:
 #line 1186 "c.y"
     {
-    node = malloc(sizeof(struct StatementList*));
+    node = malloc(sizeof(struct StatementList));
     ((struct StatementList*)node)->type = 1;
     ((struct StatementList*)node)->statementList = (struct StatementList*)(yyvsp[(1) - (2)].nPtr);
     ((struct StatementList*)node)->statement = (struct Statement*)(yyvsp[(2) - (2)].nPtr);
@@ -3745,7 +3745,7 @@ yyreduce:
   case 194:
 #line 1196 "c.y"
     {
-    node = malloc(sizeof(struct ExpressionStatement*));
+    node = malloc(sizeof(struct ExpressionStatement));
     ((struct ExpressionStatement*)node)->type = 0;
     (yyval.nPtr) = node;
 }
@@ -3754,7 +3754,7 @@ yyreduce:
   case 195:
 #line 1201 "c.y"
     {
-    node = malloc(sizeof(struct ExpressionStatement*));
+    node = malloc(sizeof(struct ExpressionStatement));
     ((struct ExpressionStatement*)node)->type = 1;
     ((struct ExpressionStatement*)node)->expression = (struct Expression*)(yyvsp[(1) - (2)].nPtr);
     (yyval.nPtr) = node;
@@ -3764,7 +3764,7 @@ yyreduce:
   case 196:
 #line 1210 "c.y"
     {
-    node = malloc(sizeof(struct SelectionStatement*));
+    node = malloc(sizeof(struct SelectionStatement));
     ((struct SelectionStatement*)node)->type = 0;
     ((struct SelectionStatement*)node)->expression = (struct Expression*)(yyvsp[(3) - (5)].nPtr);
     ((struct SelectionStatement*)node)->s1 = (struct Statement*)(yyvsp[(5) - (5)].nPtr);
@@ -3775,7 +3775,7 @@ yyreduce:
   case 197:
 #line 1217 "c.y"
     {
-    node = malloc(sizeof(struct SelectionStatement*));
+    node = malloc(sizeof(struct SelectionStatement));
     ((struct SelectionStatement*)node)->type = 1;
     ((struct SelectionStatement*)node)->expression = (struct Expression*)(yyvsp[(3) - (7)].nPtr);
     ((struct SelectionStatement*)node)->s1 = (struct Statement*)(yyvsp[(5) - (7)].nPtr);
@@ -3787,7 +3787,7 @@ yyreduce:
   case 198:
 #line 1225 "c.y"
     {
-    node = malloc(sizeof(struct SelectionStatement*));
+    node = malloc(sizeof(struct SelectionStatement));
     ((struct SelectionStatement*)node)->type = 2;
     ((struct SelectionStatement*)node)->expression = (struct Expression*)(yyvsp[(3) - (5)].nPtr);
     ((struct SelectionStatement*)node)->s1 = (struct Statement*)(yyvsp[(5) - (5)].nPtr);
@@ -3798,7 +3798,7 @@ yyreduce:
   case 199:
 #line 1235 "c.y"
     {
-    node = malloc(sizeof(struct IterationStatement*));
+    node = malloc(sizeof(struct IterationStatement));
     ((struct IterationStatement*)node)->type = 0;
     ((struct IterationStatement*)node)->expression = (struct Expression*)(yyvsp[(3) - (5)].nPtr);
     ((struct IterationStatement*)node)->statement = (struct Statement*)(yyvsp[(5) - (5)].nPtr);
@@ -3809,7 +3809,7 @@ yyreduce:
   case 200:
 #line 1242 "c.y"
     {
-    node = malloc(sizeof(struct IterationStatement*));
+    node = malloc(sizeof(struct IterationStatement));
     ((struct IterationStatement*)node)->type = 1;
     ((struct IterationStatement*)node)->statement = (struct Statement*)(yyvsp[(2) - (7)].nPtr);
     ((struct IterationStatement*)node)->expression = (struct Expression*)(yyvsp[(5) - (7)].nPtr);
@@ -3820,7 +3820,7 @@ yyreduce:
   case 201:
 #line 1249 "c.y"
     {
-    node = malloc(sizeof(struct IterationStatement*));
+    node = malloc(sizeof(struct IterationStatement));
     ((struct IterationStatement*)node)->type = 2;
     ((struct IterationStatement*)node)->s1 = (struct ExpressionStatement*)(yyvsp[(3) - (6)].nPtr);
     ((struct IterationStatement*)node)->s2 = (struct ExpressionStatement*)(yyvsp[(4) - (6)].nPtr);
@@ -3832,7 +3832,7 @@ yyreduce:
   case 202:
 #line 1257 "c.y"
     {
-    node = malloc(sizeof(struct IterationStatement*));
+    node = malloc(sizeof(struct IterationStatement));
     ((struct IterationStatement*)node)->type = 3;
     ((struct IterationStatement*)node)->s1 = (struct ExpressionStatement*)(yyvsp[(3) - (7)].nPtr);
     ((struct IterationStatement*)node)->s2 = (struct ExpressionStatement*)(yyvsp[(4) - (7)].nPtr);
@@ -3845,7 +3845,7 @@ yyreduce:
   case 203:
 #line 1269 "c.y"
     {
-    node = malloc(sizeof(struct JumpStatement*));
+    node = malloc(sizeof(struct JumpStatement));
     ((struct JumpStatement*)node)->type = 0;
     ((struct JumpStatement*)node)->identifier = (char*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3855,7 +3855,7 @@ yyreduce:
   case 204:
 #line 1275 "c.y"
     {
-    node = malloc(sizeof(struct JumpStatement*));
+    node = malloc(sizeof(struct JumpStatement));
     ((struct JumpStatement*)node)->type = 1;
     (yyval.nPtr) = node;
 }
@@ -3864,7 +3864,7 @@ yyreduce:
   case 205:
 #line 1280 "c.y"
     {
-    node = malloc(sizeof(struct JumpStatement*));
+    node = malloc(sizeof(struct JumpStatement));
     ((struct JumpStatement*)node)->type = 2;
     (yyval.nPtr) = node;
 }
@@ -3873,7 +3873,7 @@ yyreduce:
   case 206:
 #line 1285 "c.y"
     {
-    node = malloc(sizeof(struct JumpStatement*));
+    node = malloc(sizeof(struct JumpStatement));
     ((struct JumpStatement*)node)->type = 3;
     (yyval.nPtr) = node;
 }
@@ -3882,7 +3882,7 @@ yyreduce:
   case 207:
 #line 1290 "c.y"
     {
-    node = malloc(sizeof(struct JumpStatement*));
+    node = malloc(sizeof(struct JumpStatement));
     ((struct JumpStatement*)node)->type = 4;
     ((struct JumpStatement*)node)->expression = (struct Expression*)(yyvsp[(2) - (3)].nPtr);
     (yyval.nPtr) = node;
@@ -3892,27 +3892,29 @@ yyreduce:
   case 208:
 #line 1299 "c.y"
     {
-    node = malloc(sizeof(struct TranslationUnit*));
+    node = malloc(sizeof(struct TranslationUnit));
     ((struct TranslationUnit*)node)->type = 0;
     ((struct TranslationUnit*)node)->externalDeclaration = (struct ExternalDeclaration*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
+    translation_unit_begin(node);
 }
     break;
 
   case 209:
-#line 1305 "c.y"
+#line 1306 "c.y"
     {
-    node = malloc(sizeof(struct TranslationUnit*));
+    node = malloc(sizeof(struct TranslationUnit));
     ((struct TranslationUnit*)node)->type = 1;
     ((struct TranslationUnit*)node)->translationUnit = (struct TranslationUnit*)(yyvsp[(1) - (2)].nPtr);
     (yyval.nPtr) = node;
+    translation_unit_begin(node);
 }
     break;
 
   case 210:
-#line 1314 "c.y"
+#line 1316 "c.y"
     {
-    node = malloc(sizeof(struct ExternalDeclaration*));
+    node = malloc(sizeof(struct ExternalDeclaration));
     ((struct ExternalDeclaration*)node)->type = 0;
     ((struct ExternalDeclaration*)node)->functionDefinition = (struct FunctionDefinition*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3920,9 +3922,9 @@ yyreduce:
     break;
 
   case 211:
-#line 1320 "c.y"
+#line 1322 "c.y"
     {
-    node = malloc(sizeof(struct ExternalDeclaration*));
+    node = malloc(sizeof(struct ExternalDeclaration));
     ((struct ExternalDeclaration*)node)->type = 1;
     ((struct ExternalDeclaration*)node)->declaration = (struct Declaration*)(yyvsp[(1) - (1)].nPtr);
     (yyval.nPtr) = node;
@@ -3930,9 +3932,9 @@ yyreduce:
     break;
 
   case 212:
-#line 1329 "c.y"
+#line 1331 "c.y"
     {
-    node = malloc(sizeof(struct FunctionDefinition*));
+    node = malloc(sizeof(struct FunctionDefinition));
     ((struct FunctionDefinition*)node)->type = 0;
     ((struct FunctionDefinition*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (4)].nPtr);
     ((struct FunctionDefinition*)node)->declarator = (struct Declarator*)(yyvsp[(2) - (4)].nPtr);
@@ -3943,9 +3945,9 @@ yyreduce:
     break;
 
   case 213:
-#line 1338 "c.y"
+#line 1340 "c.y"
     {
-    node = malloc(sizeof(struct FunctionDefinition*));
+    node = malloc(sizeof(struct FunctionDefinition));
     ((struct FunctionDefinition*)node)->type = 1;
     ((struct FunctionDefinition*)node)->declarationSpecifiers = (struct DeclarationSpecifiers*)(yyvsp[(1) - (3)].nPtr);
     ((struct FunctionDefinition*)node)->declarator = (struct Declarator*)(yyvsp[(2) - (3)].nPtr);
@@ -3955,9 +3957,9 @@ yyreduce:
     break;
 
   case 214:
-#line 1346 "c.y"
+#line 1348 "c.y"
     {
-    node = malloc(sizeof(struct FunctionDefinition*));
+    node = malloc(sizeof(struct FunctionDefinition));
     ((struct FunctionDefinition*)node)->type = 2;
     ((struct FunctionDefinition*)node)->declarationList = (struct DeclarationList*)(yyvsp[(1) - (3)].nPtr);
     ((struct FunctionDefinition*)node)->compoundStatement = (struct CompoundStatement*)(yyvsp[(2) - (3)].nPtr);
@@ -3966,9 +3968,9 @@ yyreduce:
     break;
 
   case 215:
-#line 1353 "c.y"
+#line 1355 "c.y"
     {
-    node = malloc(sizeof(struct FunctionDefinition*));
+    node = malloc(sizeof(struct FunctionDefinition));
     ((struct FunctionDefinition*)node)->type = 3;
     ((struct FunctionDefinition*)node)->declarator = (struct Declarator*)(yyvsp[(1) - (2)].nPtr);
     ((struct FunctionDefinition*)node)->compoundStatement = (struct CompoundStatement*)(yyvsp[(2) - (2)].nPtr);
@@ -3978,7 +3980,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 3982 "y.tab.c"
+#line 3984 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -4192,7 +4194,7 @@ yyreturn:
 }
 
 
-#line 1362 "c.y"
+#line 1364 "c.y"
 
 #include <stdio.h>
 
@@ -4209,6 +4211,7 @@ char *s;
 
 int main(void)
 {
+    freopen("/Users/skyer/Desktop/compiler/test.c", "r" ,stdin);
     yyparse();
     return 0;
 }

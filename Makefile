@@ -1,4 +1,5 @@
-compiler : declaration.o expression.o lex.yy.o specify.o statement.o symbol.o util.o y.tab.o
+compiler : declaration.o expression.o buffer.o lex.yy.o specify.o statement.o symbol.o util.o y.tab.o
+	   cc *.o -o compiler
 
 declaration: specify.o expression.o
 
@@ -8,13 +9,15 @@ lex.yy:
 
 specify: 
 
-statement: specify.o declaration.o
+statement: buffer.o specify.o declaration.o
 
 symbol: util.o
 
 util: declaration.o
 
+buffer: util.o
+
 y.tab:
 
 clean:
-	rm compiler *.o
+	rm *.o compiler

@@ -1,7 +1,7 @@
 #include "symbol.h"
 #include "util.h"
 #define PRIME 99997
-#define CREATE_NODE(a) ( (a*)malloc(sizeof(a*)) )
+#define CREATE_NODE(a) ( (a*)malloc(sizeof(a)) )
 
 static int symbols_prefix[150000] = {0};
 static char* symbols_table[150000] = {0};
@@ -13,14 +13,13 @@ static int Domain_ptr = 0;
 static struct DomainList* cur = 0;
 
 void initialize_symbols() {
-    symbols_prefix[0] = 1;
+    symbols_prefix[0] = 0;
     symbols_table[0] = 0;
 
     cur = CREATE_NODE(struct DomainList);
+    memset(cur, 0, sizeof(struct DomainList));
     cur->domain = CREATE_NODE(struct Domain);
-    cur->next = 0;
-    cur->domain->symbols = 0;
-    cur->domain->children = 0;
+    memset(cur->domain, 0, sizeof(struct Domain));
     path[Domain_ptr] = cur;
 }
 
@@ -46,7 +45,10 @@ void pop_arg()
 void push_domain()
 {
     struct DomainList* node = CREATE_NODE(struct DomainList);
+    memset(node, 0, sizeof(struct DomainList));
     node->domain = CREATE_NODE(struct Domain);
+    memset(node->domain, 0, sizeof(struct Domain));
+    cur->next = node;
     cur = cur->next;
     path[++Domain_ptr] = cur;
 }
@@ -100,12 +102,15 @@ struct Symbol* name2symbol(const char* name, int type)
 struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier, int stars, int type, int length)
 {
     struct Symbol* symbol = CREATE_NODE(struct Symbol);
+    memset(symbol, 0, sizeof(struct Symbol));
     int key = 0;
     struct SymbolList* symbolList = 0;
     symbol->qualifier = qualifier;
     symbol->specifier = specifier;
     symbol->length = length;
-    symbol->name = name;
+    long len = strlen(name);
+    symbol->name = (char*)malloc(len + 1);
+    strcpy(symbol->name, name);
     symbol->storage = storage;
     symbol->stars = stars;
     symbol->type = type;
@@ -115,10 +120,15 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
         return symbol;
     }
     if (find_symbol(cur->domain->symbols, name, type))
-        return 0;
+    {
+        printf("symbol %s redefined\n", name);
+        exit(1);
+    }
     key =get_symbol(name);
     symbol->prefix = symbols_prefix[key]++;
+    symbol->prefix++;
     symbolList = CREATE_NODE(struct SymbolList);
+    memset(symbolList, 0, sizeof(struct SymbolList));
     symbolList->symbol = symbol;
     symbolList->next = cur->domain->symbols;
     cur->domain->symbols = symbolList;

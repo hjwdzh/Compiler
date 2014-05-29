@@ -184,9 +184,9 @@ int numPoint(struct Pointer* node)
 
 void code_gen_symbol(char c, struct Symbol* symbol)
 {
-    if (symbol->type == 0)
+    if (c > 0 && symbol->type != 2)
         *g_ptr++ = c;
-    sprintf(buf, "%d", symbol->stars);
+    sprintf(buf, "%d", symbol->prefix);
     ADDSTRING(buf);
 }
 

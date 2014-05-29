@@ -32,19 +32,19 @@ struct Symbol* primary_expression(struct PrimaryExpression* node)
             return symbol;
         case 1://INT
             sprintf(buf, "%d", node->iValue);
-            return new_symbol(buf, 0, 1, 4, 0, 0, 2);
+            return new_symbol(buf, 0, 1, 4, 0, 2, 0);
             break;
         case 2://char
             sprintf(buf, "%d", (int)node->cValue);
-            return new_symbol(buf, 0, 1, 2, 0, 0, 2);
+            return new_symbol(buf, 0, 1, 2, 0, 2, 0);
         case 3://f
             sprintf(buf, "%f", node->fValue);
-            return new_symbol(buf, 0, 1, 6, 0, 0, 2);
+            return new_symbol(buf, 0, 1, 6, 0, 2, 0);
         case 4://d
             sprintf(buf, "%lf", node->dValue);
-            return new_symbol(buf, 0, 1, 7, 0, 0, 2);
+            return new_symbol(buf, 0, 1, 7, 0, 2, 0);
         case 5:
-            return new_symbol(node->literal, 0, 1, 2, 1, 0, 2);
+            return new_symbol(node->literal, 0, 1, 2, 1, 2, 0);
         case 6:
             return expression_func(node->expression);
         default:
