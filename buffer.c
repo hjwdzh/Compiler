@@ -13,6 +13,8 @@ void initialize_buffer()
 
 void code_gen()
 {
+    freopen("/Users/skyer/Desktop/compiler/test.ll", "w", stdout);
     printf("%s", global_buffer);
+    fclose(stdout);
 }
 

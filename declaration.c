@@ -129,6 +129,7 @@ void parameter_type_list(struct ParameterTypeList* node)
 struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars)
 {
     int i;
+    ADDSTRING("  ");
     struct Symbol* symbol = gen_new_symbol(declarator, c, storage, qualifier, specifier, stars, 0, 0);
     ADDSTRING(" = alloca ");
     code_gen_type_specifier(specifier,0,0,0);
@@ -151,12 +152,13 @@ void initializer_func(struct Symbol* orig_symbol, struct Initializer* node, int 
         //assignment expression to do
         struct Symbol* symbol = assignment_expression(node->assignmentExpression);
         int specifier = orig_symbol->specifier;
-        ADDSTRING("store ");
-        code_gen_type_specifier(specifier,1,0,0);
+        symbol = cast_symbol(symbol, specifier, orig_symbol->stars);
+        ADDSTRING("  store ");
+        code_gen_type_specifier(specifier,0,0,stars);
         ADDSTRING(" ");
         code_gen_symbol('%', symbol);
         ADDSTRING(", ");
-        code_gen_type_specifier(specifier,1,0,0);
+        code_gen_type_specifier(specifier,0,0,stars);
         ADDSTRING("* ");
         code_gen_symbol('%', orig_symbol);
         ADDSTRING(", align ");
@@ -192,7 +194,7 @@ void declaration_func(struct Declaration* node, char c)
     declaration_specifiers(node->declarationSpecifiers, &storage, &qualifier, &specifier, 1);
     if (node->type == 1)
     {
-        init_declarator_list(node->initDeclaratorList, c, storage, qualifier, specifier);
+        init_declarator_list(node->initDeclaratorList, storage, qualifier, specifier, c);
     }
 }
 

@@ -119,7 +119,7 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
     {
         return symbol;
     }
-    if (find_symbol(cur->domain->symbols, name, type))
+    if (len > 0 && find_symbol(cur->domain->symbols, name, type))
     {
         printf("symbol %s redefined\n", name);
         exit(1);

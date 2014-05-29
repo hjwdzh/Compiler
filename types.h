@@ -64,7 +64,7 @@ struct function_definition;
 struct PrimaryExpression
 {
     int type;
-    union {
+//    union {
         char cValue;
         float fValue;
         int iValue;
@@ -72,21 +72,21 @@ struct PrimaryExpression
         char* identifier;
         char* literal;
         struct Expression* expression;
-    };
+ //   };
 };
 
 struct PostfixExpression
 {
     int type;
-    union{
+ //   union{
         struct PrimaryExpression* primaryExpression;
         struct PostfixExpression* postfixExpression;
-    };
-    union{
+   // };
+   // union{
         struct Expression* expression;
         struct ArgumentExpressionList* argumentExpressionList;
         char* identifier;
-    };
+    //};
 };
 
 struct ArgumentExpressionList
@@ -99,22 +99,22 @@ struct ArgumentExpressionList
 struct UnaryExpression
 {
     int type;
-    union {
+    //union {
         struct PostfixExpression* postfixExpression;
         struct UnaryExpression* unaryExpression;
         struct TypeName* typeName;
         char unaryOperator;
-    };
+    //};
     struct CastExpression* castExpression;
 };
 
 struct CastExpression
 {
     int type;
-    union {
+    //union {
         struct UnaryExpression* unaryExpression;
         struct TypeName* typeName;
-    };
+    //};
     struct CastExpression* castExpression;
 };
 
@@ -200,10 +200,10 @@ struct ConditionalExpression
 struct AssignmentExpression
 {
     int type;
-    union{
+    //union{
         struct ConditionalExpression* conditionalExpression;
         struct UnaryExpression* unaryExpression;
-    };
+    //};
     int assignmentOperator;
     struct AssignmentExpression* assignmentExpression;
 };
@@ -231,14 +231,14 @@ struct Declaration
 struct DeclarationSpecifiers
 {
     int type;
-    union {
+    //union {
         int storageClassSpecifier;
         int typeSpecifier;
         int typeQualifier;
-    };
-    union {
+    //};
+    //union {
         struct DeclarationSpecifiers* declarationSpecifiers;
-    };
+    //};
 };
 
 struct InitDeclaratorList
@@ -285,10 +285,10 @@ struct StructDeclaration
 struct SpecifierQualifierList
 {
     int type;
-    union {
+    //union {
         int typeSpecifier;
         int typeQualifier;
-    };
+    //};
     struct SpecifierQualifierList* specifierQualifierList;
 };
 
@@ -338,12 +338,12 @@ struct DirectDeclarator
 {
     int type;
     char* identifier;
-    union {
+    //union {
         struct Declarator* declarator;
         struct ParameterTypeList* parameterTypeList;
         struct IdentifierList* identifierList;
         struct ConstantExpression* constantExpression;
-    };
+    //};
     struct DirectDeclarator* directDeclarator;
 };
 
@@ -378,10 +378,10 @@ struct ParameterDeclaration
 {
     int type;
     struct DeclarationSpecifiers* declarationSpecifiers;
-    union {
+   // union {
         struct Declarator* declarator;
         struct AbstractDeclarator* abstractDeclarator;
-    };
+   // };
 };
 
 struct IdentifierList
@@ -408,10 +408,10 @@ struct AbstractDeclarator
 struct DirectAbstractDeclarator
 {
     int type;
-    union {
+    //union {
         struct AbstractDeclarator* abstractDeclarator;
         struct DirectAbstractDeclarator* directAbstractDeclarator;
-    };
+    //};
     struct ConstantExpression* constantExpression;
     struct ParameterTypeList* parameterTypeList;
 };
@@ -419,10 +419,10 @@ struct DirectAbstractDeclarator
 struct Initializer
 {
     int type;
-    union {
+    //union {
         struct AssignmentExpression* assignmentExpression;
         struct InitializerList* initializerList;
-    };
+    //};
 };
 
 struct InitializerList
@@ -435,33 +435,33 @@ struct InitializerList
 struct Statement
 {
     int type;
-    union {
+    //union {
         struct LabeledStatement* labeledStatement;
         struct CompoundStatement* compoundStatement;
         struct ExpressionStatement* expressionStatement;
         struct SelectionStatement* selectionStatement;
         struct IterationStatement* iterationStatement;
         struct JumpStatement* jumpStatement;
-    };
+    //};
 };
 
 struct LabeledStatement
 {
     int type;
-    union {
+    //union {
         char* identifier;
         struct ConstantExpression* constantExpression;
-    };
+    //};
     struct Statement* statement;
 };
 
 struct CompoundStatement
 {
     int type;
-    union {
+    //union {
         struct StatementList* statementList;
         struct DeclarationList* declarationList;
-    };
+    //};
 };
 
 struct DeclarationList
@@ -502,10 +502,10 @@ struct IterationStatement
 struct JumpStatement
 {
     int type;
-    union {
+    //union {
         char* identifier;
         struct Expression* expression;
-    };
+    //};
 };
 
 struct TranslationUnit

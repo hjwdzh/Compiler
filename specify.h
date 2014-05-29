@@ -6,5 +6,6 @@
 const char* declaration_specifiers(struct DeclarationSpecifiers* node, int* storage, int* qualifier, int* specifier, int isNotOutput);
 
 void type_qualifier_list(struct TypeQualifierList* node, int *qualifier);
+struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars);
 
 #endif

@@ -13,35 +13,28 @@ void code_gen_with_header(char *filename)
 
 int len_gen_type_specifier(int val)
 {
-    switch (val) {
-        case 1:
-            return 0;
-            break;
-            
-        case 2:
-            return 1;
-            break;
-            
-        case 3:
-            return 2;
-            break;
-            
-        case 4:
-            return 4;
-            break;
-            
-        case 5:
-            return 8;
-            break;
-            
-        case 6:
-            return 4;
-            break;
-            
-        case 7:
-            return 8;
-            break;
-            
+    if (val & 0x02) {
+        return 0;
+    }
+    if (val & 0x04) {
+        return 1;
+    }
+    if (val & 0x08) {
+        return 2;
+    }
+    if (val & 0x10) {
+        return 4;
+    }
+    if (val & 0x20) {
+        return 8;
+    }
+    if (val & 0x40) {
+       return 4;
+    }
+    if (val & 0x80) {
+       return 8;
+    }
+/*
         case 8:
             // to do: union or struct
             break;
@@ -51,23 +44,23 @@ int len_gen_type_specifier(int val)
             break;
             
         case 10:
-            // to do: typename
+*/            // to do: typename
             
-        default:
-            break;
-    }
     return 0;
 }
 
 const char* code_gen_type_specifier(int val, int isnsw, int length, int stars)
 {
-    int i;
+    int i,j;
     sprintf(buf, "[%d x ", length);
     if (length > 0)
         ADDSTRING(buf);
     if (isnsw && (val & (1 << 9)) == 0)
         ADDSTRING("nsw ");
-    switch (val) {
+    for (j = 0; j < 13; ++j)
+        if ((val & (1 << j)) > 0)
+        {
+    switch (j) {
         case 1:
             ADDSTRING("void");
             if (length > 0)
@@ -172,6 +165,7 @@ const char* code_gen_type_specifier(int val, int isnsw, int length, int stars)
         default:
             break;
     }
+        }
     return "";
 }
 
@@ -186,8 +180,15 @@ void code_gen_symbol(char c, struct Symbol* symbol)
 {
     if (c > 0 && symbol->type != 2)
         *g_ptr++ = c;
-    sprintf(buf, "%d", symbol->prefix);
-    ADDSTRING(buf);
+    if (symbol->name && symbol->name[0] != 0)
+    {
+        ADDSTRING(symbol->name);
+    }
+    if (symbol->type != 2)
+    {
+        sprintf(buf, "%d", symbol->prefix);
+        ADDSTRING(buf);
+    }
 }
 
 struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int length, int print_star)

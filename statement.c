@@ -268,7 +268,7 @@ void function_definition(struct FunctionDefinition* node)
     ADDSTRING(" ");
     push_domain();
     declarator_func(node->declarator, &point_quality, '@', 1);
-    ADDSTRING("{\n");
+    ADDSTRING(" nounwind ssp uwtable{\n");
     // to do: declaration_list
     compound_statement(node->compoundStatement);
     ADDSTRING("}\n");

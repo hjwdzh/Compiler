@@ -1,7 +1,7 @@
 int main()
 {
-hello:
-	3;
-   goto hello;
-    return 0;
+	int k = 'c';
+	float i = k;
+	k = i;
+	return 3;
 }
