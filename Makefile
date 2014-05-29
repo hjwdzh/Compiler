@@ -22,4 +22,4 @@ buffer: util.o
 y.tab:
 
 clean:
-	rm compiler y.output
+	rm compiler y.output lex.yy.c y.tab.c
