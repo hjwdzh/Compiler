@@ -21,5 +21,6 @@ struct Symbol* conditional_expression(struct ConditionalExpression* node);
 struct Symbol* assignment_expression(struct AssignmentExpression* node);
 struct Symbol* expression_func(struct Expression* node);
 void argument_expression_list(struct ArgumentExpressionList* node);
+struct Symbol* constant_expression(struct ConstantExpression* node);
 
 #endif

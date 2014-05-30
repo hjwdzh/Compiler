@@ -48,7 +48,6 @@ struct Symbol* primary_expression(struct PrimaryExpression* node, struct Symbol*
 struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol** orig_symbol)
 {
     struct Symbol* symbol, *ref, *newSymbol, *symbol1;
-    int i;
     switch (node->type) {
         case 0:
             return primary_expression(node->primaryExpression, orig_symbol);
@@ -56,12 +55,11 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             symbol = load_symbol(postfix_expression(node->postfixExpression, orig_symbol));
             test_referenceable(symbol);
             ref = load_symbol(expression_func(node->expression));
-            *orig_symbol = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars - 1, 0, 0);
+            *orig_symbol = new_symbol("", symbol->storage, 0, symbol->specifier, symbol->stars - 1, 0, 0);
+            ADDSTRING("  ");
             code_gen_symbol('%', *orig_symbol);
             ADDSTRING(" = getelementptr inbounds ");
             code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
-            for (i = 0; i < symbol->stars; ++i)
-                ADDSTRING("*");
             ADDSTRING(" ");
             if (symbol->depth == 0)
                 code_gen_symbol('@', symbol);
@@ -72,7 +70,32 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             ADDSTRING(" ");
             code_gen_symbol(0, ref);
             ADDSTRING("\n");
-            return *orig_symbol;
+            ADDSTRING("  ");
+            newSymbol = new_symbol("", 0, 1, symbol->specifier, symbol->stars - 1, 0, 0);
+            code_gen_symbol('%', newSymbol);
+            ADDSTRING(" = load ");
+            code_gen_type_specifier(symbol->specifier, 0, (*orig_symbol)->length, symbol->stars);
+            ADDSTRING(" ");
+            code_gen_symbol('%', *orig_symbol);
+            ADDSTRING(", align ");
+            if (newSymbol->stars)
+            {
+                if (PTR_LENGTH == 8)
+                {
+                    ADDSTRING("8\n");
+                }
+                else
+                {
+                    ADDSTRING("4\n");
+                }
+            }
+            else
+            {
+                int len = len_gen_type_specifier(newSymbol->specifier);
+                sprintf(buf, "%d\n", len);
+                ADDSTRING(buf);
+            }
+            return newSymbol;
         case 2:
         case 3:
             symbol = postfix_expression(node->postfixExpression, orig_symbol);
@@ -231,9 +254,8 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                     ADDSTRING("  ");
                     code_gen_symbol('%', symbol1);
                     ADDSTRING(" = load ");
+                    code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
                     code_gen_symbol('%', symbol);
-                    for (i = 0; i < symbol1->stars; ++i)
-                        ADDSTRING("*");
                     ADDSTRING(" ");
                     code_gen_symbol('%', symbol);
                     ADDSTRING(", align 8\n");
@@ -667,4 +689,9 @@ struct Symbol* expression_func(struct Expression* node)
     if (node->type == 1)
         return expression_func(node->expression);
     return assignment_expression(node->assignmentExpression);
+}
+
+struct Symbol* constant_expression(struct ConstantExpression* node)
+{
+    return conditional_expression(node->conditionalExpression);
 }

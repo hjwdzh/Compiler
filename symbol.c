@@ -138,7 +138,7 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
 struct Symbol* load_symbol(struct Symbol* symbol)
 {
     struct Symbol *symbol1;
-    if (!symbol->name || strlen(symbol->name))
+    if (!symbol->name || strlen(symbol->name) == 0 || symbol->type == 2)
         return symbol;
     symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
     ADDSTRING("  ");

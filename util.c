@@ -204,7 +204,7 @@ void code_gen_symbol(char c, struct Symbol* symbol)
     }
 }
 
-struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int length, int print_star)
+struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int print_star)
 {
     char* ch;
     if (declarator->type == 0)
@@ -217,8 +217,9 @@ struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage
         }
         *g_ptr = 0;
     }
-    ch = declarator_func(declarator, &specifier, c, 0);
-    struct Symbol* symbol = new_symbol(ch, storage, qualifier, specifier, *stars, 0, length);
+    
+    ch = declarator_func(declarator, &specifier, c, stars, length, 0);
+    struct Symbol* symbol = new_symbol(ch, storage, qualifier, specifier, *stars, 0, *length);
     if (symbol == 0)
     {
         printf("symbol conflict!\n");

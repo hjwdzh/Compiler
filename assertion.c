@@ -148,6 +148,7 @@ struct Symbol* test_add(struct Symbol** symbol1, struct Symbol** symbol2, int ty
     {
         *symbol1 = cast_symbol(*symbol1, 32, 0);
         struct Symbol* symbol3 = new_symbol("", 0, 1, (*symbol2)->specifier, (*symbol2)->stars, 0, (*symbol2)->length);
+        ADDSTRING("  ");
         code_gen_symbol('%', symbol3);
         ADDSTRING(" = getelementptr inbounds ");
         code_gen_type_specifier((*symbol2)->specifier, 0, (*symbol2)->length, (*symbol2)->stars);
@@ -179,5 +180,14 @@ void test_relation(struct Symbol** symbol1, struct Symbol** symbol2)
     if ((*symbol1)->stars > (*symbol2)->stars)
     {
         *symbol2 = cast_symbol(*symbol2, (*symbol1)->specifier, (*symbol1)->stars);
+    }
+}
+
+void test_constant(struct Symbol* symbol1)
+{
+    if (symbol1->type != 2)
+    {
+        printf("Cannot make declaration with a variable!\n");
+        exit(1);
     }
 }

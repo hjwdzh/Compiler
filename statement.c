@@ -262,12 +262,12 @@ void compound_statement(struct CompoundStatement* node)
 void function_definition(struct FunctionDefinition* node)
 {
     // to do
-    int storage = 0, specifier = 0, ret_qualifier = 0, point_quality = 0;
+    int storage = 0, specifier = 0, ret_qualifier = 0, point_quality = 0, stars;
     ADDSTRING("define ");
     declaration_specifiers(node->declarationSpecifiers, &storage, &ret_qualifier, &specifier, 0);
     ADDSTRING(" ");
     push_domain();
-    declarator_func(node->declarator, &point_quality, '@', 1);
+    declarator_func(node->declarator, &point_quality, '@', &stars, 0, 1);
     ADDSTRING(" nounwind ssp uwtable{\n");
     // to do: declaration_list
     compound_statement(node->compoundStatement);

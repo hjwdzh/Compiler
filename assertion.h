@@ -27,4 +27,5 @@ struct Symbol* test_add(struct Symbol** symbol1, struct Symbol** symbol2, int ty
 
 void test_relation(struct Symbol** symbol1, struct Symbol** symbol2);
 
+void test_constant(struct Symbol* symbol);
 #endif
