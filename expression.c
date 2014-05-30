@@ -35,7 +35,7 @@ struct Symbol* primary_expression(struct PrimaryExpression* node, struct Symbol*
             *orig_symbol = new_symbol(buf, 0, 2, 1 << 7, 0, 2, 0);
             return *orig_symbol;
         case 5:
-            *orig_symbol = new_symbol(node->literal, 0, 2, 1, 1, 2, 0);
+            *orig_symbol = new_symbol(node->literal, 0, 2, (PTR_LENGTH == 8) ? (1 << 5) : (1 << 4), 1, 2, 0);
             return *orig_symbol;
         case 6:
             *orig_symbol = expression_func(node->expression);
@@ -71,7 +71,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             code_gen_symbol(0, ref);
             ADDSTRING("\n");
             ADDSTRING("  ");
-            newSymbol = new_symbol("", 0, 1, symbol->specifier, symbol->stars - 1, 0, 0);
+            newSymbol = new_symbol("", 0, 2, symbol->specifier, symbol->stars - 1, 0, 0);
             code_gen_symbol('%', newSymbol);
             ADDSTRING(" = load ");
             code_gen_type_specifier(symbol->specifier, 0, (*orig_symbol)->length, symbol->stars);
@@ -125,9 +125,11 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
         case 6:
         case 7:
             symbol = load_symbol(postfix_expression(node->postfixExpression, orig_symbol));
-            test_changeable(symbol);
+            test_changeable(*orig_symbol);
             symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
+            ADDSTRING("  ");
             code_gen_symbol('%', symbol1);
+            ADDSTRING(" = ");
             if ((symbol->specifier & (3 << 6)) > 0)
             {
                 ADDSTRING("f");
@@ -141,6 +143,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
                 ADDSTRING("sub ");
             }
             code_gen_type_specifier(symbol->specifier,1,symbol->length, symbol->stars);
+            ADDSTRING(" ");
             code_gen_symbol('%', symbol);
             ADDSTRING(", ");
             if ((symbol->specifier & (3 << 6)) > 0)
@@ -151,7 +154,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             {
                 ADDSTRING("1\n");
             }
-            ADDSTRING("store ");
+            ADDSTRING("  store ");
             code_gen_type_specifier(symbol->specifier,0,symbol->length, symbol->stars);
             ADDSTRING(" ");
             code_gen_symbol('%', symbol1);
@@ -172,7 +175,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
 
 struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** orig_symbol)
 {
-    int i, len;
+    int len;
     struct Symbol *symbol, *symbol1 = NULL;
     switch (node->type) {
         case 0:
@@ -180,7 +183,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
         case 1:
         case 2:
             symbol = load_symbol(unary_expression(node->unaryExpression, orig_symbol));
-            test_changeable(symbol);
+            test_changeable(*orig_symbol);
             if (node->type == 2)
                 symbol1 = test_calculable(symbol, '+');
             else
@@ -415,7 +418,7 @@ struct Symbol* relational_expression(struct RelationalExpression* node)
         symbol3 = test_calculable2(&symbol1, &symbol2, '>');
     if (symbol3)
         return symbol3;
-    symbol3 = new_symbol("", symbol2->storage, symbol2->qualifier, symbol2->specifier, symbol2->stars, 0, symbol2->length);
+    symbol3 = new_symbol("", 0, 2, 1, 0, 0, 0);
     char c = 's';
     if ((symbol1->specifier & (1 << 9)) > 0 || symbol1->stars)
         c = 'u';
@@ -446,7 +449,7 @@ struct Symbol* relational_expression(struct RelationalExpression* node)
             ADDSTRING("gt ");
         }
     }
-    code_gen_type_specifier(symbol3->specifier,0, symbol3->length, symbol3->stars);
+    code_gen_type_specifier(symbol1->specifier,0, symbol1->length, symbol1->stars);
     ADDSTRING(" ");
     code_gen_symbol('%', symbol1);
     ADDSTRING(", ");
@@ -520,7 +523,7 @@ struct Symbol* logical_and_expression(struct LogicalAndExpression* node)
     code_gen_symbol(0, label2);
     ADDSTRING("\n");
     ADDSTRING("  ");
-    symbol2 = new_symbol("", 0, 2, 1, 0, 0, 0);
+    symbol2 = new_symbol("", 0, 2, 2, 0, 0, 0);
     code_gen_symbol('%', symbol2);
     ADDSTRING(" = phi i1 [ false, %0 ], [ ");
     code_gen_symbol('%', symbol1);
@@ -559,7 +562,7 @@ struct Symbol* logical_or_expression(struct LogicalOrExpression* node)
     code_gen_symbol(0, label2);
     ADDSTRING("\n");
     ADDSTRING("  ");
-    symbol2 = new_symbol("", 0, 2, 1, 0, 0, 0);
+    symbol2 = new_symbol("", 0, 2, 2, 0, 0, 0);
     code_gen_symbol('%', symbol2);
     ADDSTRING(" = phi i1 [ true, %0 ], [ ");
     code_gen_symbol('%', symbol1);

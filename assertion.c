@@ -132,11 +132,11 @@ struct Symbol* test_add(struct Symbol** symbol1, struct Symbol** symbol2, int ty
         struct Symbol* symbol3;
         if (type == 2)
         {
-            symbol3 = new_symbol("0", 0, 1, 16, 0, 2, 0);
+            symbol3 = new_symbol("0", 0, 2, 16, 0, 2, 0);
             *symbol2 = additive_symbol(symbol3, *symbol2, 2);
         }
         *symbol2 = cast_symbol(*symbol2, 32, 0);
-        symbol3 = new_symbol("", 0, 1, (*symbol1)->specifier, (*symbol1)->stars, 0, (*symbol1)->length);
+        symbol3 = new_symbol("", 0, 2, (*symbol1)->specifier, (*symbol1)->stars, 0, (*symbol1)->length);
         ADDSTRING("  ");
         code_gen_symbol('%', symbol3);
         ADDSTRING(" = getelementptr inbounds ");
@@ -151,7 +151,7 @@ struct Symbol* test_add(struct Symbol** symbol1, struct Symbol** symbol2, int ty
     else
     {
         *symbol1 = cast_symbol(*symbol1, 32, 0);
-        struct Symbol* symbol3 = new_symbol("", 0, 1, (*symbol2)->specifier, (*symbol2)->stars, 0, (*symbol2)->length);
+        struct Symbol* symbol3 = new_symbol("", 0, 2, (*symbol2)->specifier, (*symbol2)->stars, 0, (*symbol2)->length);
         ADDSTRING("  ");
         code_gen_symbol('%', symbol3);
         ADDSTRING(" = getelementptr inbounds ");

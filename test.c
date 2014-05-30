@@ -3,10 +3,9 @@ int main()
 {
 	int a = 0;
 	int b = 3;
-	if (a)
-	{
-		b = 4;
-		}
-	b = 5;
-	return 0;
+	do {
+		b *= a;
+		a++;
+		} while (a < 10);
+	return b;
 }

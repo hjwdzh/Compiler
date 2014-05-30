@@ -351,12 +351,17 @@ void operate_on_constant(struct Symbol* symbol1, struct Symbol* symbol2, char ty
 
 struct Symbol* convert_to_logic(struct Symbol* symbol)
 {
+    if (!symbol)
+    {
+        printf("Conditional expression fail!\n");
+        exit(1);
+    }
     if (symbol->stars)
     {
         symbol = cast_symbol(symbol, 32, 0);
     }
-    if (symbol->specifier & 0x02)
+    if (symbol->specifier & 0x01)
         return symbol;
-    struct Symbol* newsymbol = new_symbol("0", 0, 1, symbol->specifier, 0, 2, 0);
+    struct Symbol* newsymbol = new_symbol("0", 0, 2, symbol->specifier, 0, 2, 0);
     return equality_symbol(symbol, newsymbol, 2, 1);
 }
