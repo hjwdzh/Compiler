@@ -10,6 +10,7 @@
 
 #define TARGET_TRIPLE "x86_64-apple-macosx10.8.0"
 #define PTR_LENGTH 8
+#define PTR_LEN_TYPE "i64"
 #define ADDSTRING(a) {strcpy(g_ptr,a), g_ptr += strlen(a);}
 
 extern char *g_ptr;
@@ -22,5 +23,8 @@ int numPoint(struct Pointer* node);
 void code_gen_symbol(char c, struct Symbol* symbol);
 struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int length, int print_star);
 int len_gen_type_name(struct TypeName* node);
+void typename2specifier(struct TypeName* node, int *specifier, int *stars);
+int abstract2stars(struct AbstractDeclarator* node);
+int direct2stars(struct DirectAbstractDeclarator* node);
 
 #endif

@@ -63,6 +63,7 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int isOutput)
             break;
         case 6:
             direct_declarator(node->directDeclarator, c, isOutput);
+            ADDSTRING("()");
             break;
     }
     return 0;

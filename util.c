@@ -13,6 +13,8 @@ void code_gen_with_header(char *filename)
 
 int len_gen_type_specifier(int val)
 {
+    if (val & 0x01)
+        return 0;
     if (val & 0x02) {
         return 0;
     }
@@ -61,6 +63,17 @@ const char* code_gen_type_specifier(int val, int isnsw, int length, int stars)
         if ((val & (1 << j)) > 0)
         {
     switch (j) {
+        case 0:
+            ADDSTRING("i1");
+            if (length > 0)
+            {
+                ADDSTRING("]");
+            }
+            for (i = 0; i < stars; ++i)
+            {
+                ADDSTRING("*");
+            }
+            return "i1";
         case 1:
             ADDSTRING("void");
             if (length > 0)
@@ -184,7 +197,7 @@ void code_gen_symbol(char c, struct Symbol* symbol)
     {
         ADDSTRING(symbol->name);
     }
-    if (symbol->type != 2)
+    if (symbol->type != 2 && (!(symbol->name && strlen(symbol->name)) || symbol->prefix > 1))
     {
         sprintf(buf, "%d", symbol->prefix);
         ADDSTRING(buf);
@@ -217,15 +230,47 @@ struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage
 
 int len_gen_type_name(struct TypeName* node)
 {
+    int specifier, stars;
+    typename2specifier(node, &specifier, &stars);
+    if (stars == 0)
+        return len_gen_type_specifier(specifier);
+    return PTR_LENGTH;
+}
+
+int direct2stars(struct DirectAbstractDeclarator* node)
+{
+    int res = 0;
+    if (node->type == 0)
+        return abstract2stars(node->abstractDeclarator);
+    res += (node->type < 5);
+    if (node->type != 5 && node->type != 6)
+        res += direct2stars(node->directAbstractDeclarator);
+    return res;
+}
+
+int abstract2stars(struct AbstractDeclarator* node)
+{
+    int res = (node->type != 1);
+    if (node->type > 0)
+    {
+        res += direct2stars(node->directAbstractDeclarator);
+    }
+    return res;
+}
+
+void typename2specifier(struct TypeName* node, int *specifier, int *stars)
+{
     struct SpecifierQualifierList* ptr = node->specifierQualifierList;
     while ((ptr->type & 0x01) == 0)
     {
-        if (ptr->type < 2 && ptr->typeSpecifier < 8)
+        if (ptr->type < 2)
         {
-            return len_gen_type_specifier(ptr->typeSpecifier);
+            *specifier |= (1 << ptr->typeSpecifier);
         }
         ptr = ptr->specifierQualifierList;
     }
-    return 0;
+    if (node->type == 1)
+    {
+        *stars = abstract2stars(node->abstractDeclarator);
+    }
 }
-

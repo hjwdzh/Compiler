@@ -134,3 +134,22 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
     cur->domain->symbols = symbolList;
     return symbol;
 }
+
+struct Symbol* load_symbol(struct Symbol* symbol)
+{
+    struct Symbol *symbol1;
+    if (!symbol->name || strlen(symbol->name))
+        return symbol;
+    symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
+    ADDSTRING("  ");
+    code_gen_symbol('%', symbol1);
+    ADDSTRING(" = load ");
+    code_gen_type_specifier(symbol1->specifier, 0, symbol1->length, symbol1->stars);
+    ADDSTRING("* ");
+    code_gen_symbol('%', symbol);
+    ADDSTRING(", align ");
+    int l = len_gen_type_specifier(symbol1->specifier);
+    sprintf(buf, "%d\n", l);
+    ADDSTRING(buf);
+    return symbol1;
+}

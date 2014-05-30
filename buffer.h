@@ -14,6 +14,8 @@
 
 void initialize_buffer();
 void code_gen();
+void push_buffer(char* buf);
+void pop_buffer();
 
 #endif
 

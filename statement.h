@@ -1,6 +1,6 @@
 #include "util.h"
 
-void labeled_statement(struct LabeledStatement* node);
+void labeled_statement(struct LabeledStatement* node); // tested
 struct Symbol* expression_statement(struct ExpressionStatement* node);
 void selection_statement(struct SelectionStatement* node);
 void iteration_statement(struct IterationStatement* node);

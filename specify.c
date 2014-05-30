@@ -1,4 +1,5 @@
 #include "specify.h"
+#include "buffer.h"
 
 const char* declaration_specifiers(struct DeclarationSpecifiers* node, int* storage, int* qualifier, int* specifier, int isNotOutput)
 {
@@ -41,28 +42,76 @@ int parse_type(int specifier){
 
 struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
 {
-    if (symbol->stars != stars)
-    {
-        printf("Type Conflict!\n");
-        exit(1);
-    }
+    char lbuf[20];
     int orig = parse_type(symbol->specifier);
     int cur = parse_type(specifier);
-    if (orig == cur)
+    if (orig == cur && symbol->stars == stars)
         return symbol;
     struct Symbol* newsymbol = 0;
-    if (symbol->type == 2 && (orig <= 5) == (cur <= 5))
+    if (symbol->type == 2)
     {
-        if (specifier > symbol->specifier)
+        if (stars)
         {
-            symbol->specifier = specifier;
+            if (symbol->specifier & (3 << 6))
+            {
+                printf("Cannot cast float to double!\n");
+                exit(1);
+            }
+            push_buffer(lbuf);
+            ADDSTRING("inttoptr (");
+            if (PTR_LENGTH == 8)
+            {
+                ADDSTRING("i64 ");
+            }
+            else
+            {
+                ADDSTRING("i32 ");
+            }
+            ADDSTRING(symbol->name);
+            ADDSTRING(" to ");
+            code_gen_type_specifier(specifier, 0, 0, stars);
+            ADDSTRING(")");
+            pop_buffer();
+            free(symbol->name);
+            long len = strlen(lbuf);
+            symbol->name = (char*)malloc(len+1);
+            strcpy(symbol->name, lbuf);
         }
+        symbol->specifier = specifier;
+        symbol->stars = stars;
         return symbol;
+    }
+    if (symbol->stars == 0 && stars)
+    {
+        if (PTR_LENGTH == 8)
+            symbol = cast_symbol(symbol, 32, 0);
+        else
+            symbol = cast_symbol(symbol, 16, 0);
     }
     ADDSTRING("  ");
     newsymbol = new_symbol("", 0, 0, specifier, symbol->stars, 0, symbol->length);
     code_gen_symbol('%', newsymbol);
     ADDSTRING(" = ");
+    if (symbol->stars && stars)
+    {
+        ADDSTRING("bitcast");
+    } else if (symbol->stars && !stars)
+    {
+        if (cur > 5)
+        {
+            printf("Cannot cast pointer to float!\n");
+            exit(1);
+        }
+        ADDSTRING("ptrtoint");
+    } else if (!symbol->stars && stars)
+    {
+        if (orig > 5)
+        {
+            printf("Cannot cast float to pointer!\n");
+            exit(1);
+        }
+        ADDSTRING("inttoptr");
+    } else
     if ((orig <= 5) == (cur <= 5))
     {
         
@@ -75,11 +124,11 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
             else {
                 if (symbol->specifier & (1 << 9))
                 {
-                    ADDSTRING("uext ");
+                    ADDSTRING("zext");
                 }
                 else
                 {
-                    ADDSTRING("sext ");
+                    ADDSTRING("sext");
                 }
             }
         }
@@ -122,8 +171,179 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
     ADDSTRING(" ");
     code_gen_symbol('%', symbol);
     ADDSTRING(" to ");
-    code_gen_type_specifier(specifier, 0, symbol->length, symbol->stars);
+    code_gen_type_specifier(specifier, 0, symbol->length, stars);
     ADDSTRING("\n");
     return newsymbol;
 }
 
+double foperate(double d1, double d2, char type)
+{
+    switch (type) {
+        case '*':
+            return d1 * d2;
+            
+        case '/':
+            return d1 / d2;
+            
+        case '+':
+            return d1 + d2;
+            
+        case '-':
+            return d1 - d2;
+            
+        case '<':
+            return d1 < d2;
+            
+        case '>':
+            return d1 > d2;
+        
+        case '=':
+            return d1 == d2;
+            
+        case '!':
+            return d1 != d2;
+            
+        case 'o':
+            return d1 || d2;
+            
+        case 'a':
+            return d1 && d2;
+            
+        default:
+            break;
+    }
+    return 0;
+}
+
+int doperate(int d1, int d2, char type)
+{
+    switch (type) {
+        case '*':
+            return d1 * d2;
+            
+        case '/':
+            return d1 / d2;
+            
+        case '%':
+            return d1 % d2;
+            
+        case '+':
+            return d1 + d2;
+            
+        case '-':
+            return d1 - d2;
+            
+        case 'l':
+            return d1 << d2;
+        
+        case 'r':
+            return d1 >> d2;
+            
+        case '<':
+            return d1 < d2;
+            
+        case '>':
+            return d1 > d2;
+        
+        case '&':
+            return d1 & d2;
+            
+        case '^':
+            return d1 ^ d2;
+            
+        case '|':
+            return d1 | d2;
+            
+        case '=':
+            return d1 == d2;
+            
+        case '!':
+            return d1 != d2;
+            
+        case 'o':
+            return d1 || d2;
+            
+        case 'a':
+            return d1 && d2;
+            
+        default:
+            break;
+    }
+    return 0;
+}
+
+int dsoperate(int f, char type)
+{
+    switch (type) {
+        case 'n':
+            return -f;
+            
+        case '-':
+            return f - 1;
+            
+        case '~':
+            return ~f;
+            
+        case '+':
+            return f + 1;
+            
+        case '!':
+            return !f;
+            
+        default:
+            break;
+    }
+    return 0;
+}
+
+double fsoperate(double f, char type)
+{
+    switch (type) {
+        case 'n':
+            return -f;
+            
+        case '-':
+            return f - 1;
+            
+        case '+':
+            return f + 1;
+            
+        case '!':
+            return !f;
+        
+        default:
+            break;
+    }
+    return 0;
+}
+
+void operate_on_constant(struct Symbol* symbol1, struct Symbol* symbol2, char type)
+{
+    int d1, d2;
+    double f1, f2;
+    int s1 = parse_type(symbol1->specifier);
+    int s2 = parse_type(symbol2->specifier);
+    if (s1 == 5 || s1 == 6)
+        sscanf(symbol1->name, "%lf", &f1);
+    else
+        sscanf(symbol1->name, "%d", &d1);
+    if (s2 == 5 || s2 == 6)
+        sscanf(symbol2->name, "%lf", &f2);
+    else
+        sscanf(symbol2->name, "%d", &d2);
+    if (s1 == 5 || s1 == 6)
+    {
+        if (s2 == 5 || s2 == 6)
+            f1 = foperate(f1, f2, type);
+        else
+            f1 = foperate(f1, d2, type);
+        sprintf(symbol1->name, "%lf", f1);
+    }
+    else
+    {
+        if (s2 == 5 || s2 == 6)
+            sprintf(symbol1->name, "%lf", foperate(d1, f2, type));
+        else
+            sprintf(symbol1->name, "%d", doperate(d1, d2, type));
+    }
+}

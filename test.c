@@ -1,6 +1,6 @@
 int main()
 {
-	int i;
-	i = 4.0;
-	return 3;
+	int a, b;
+	a = ++b = 3;
+	return 0;
 }

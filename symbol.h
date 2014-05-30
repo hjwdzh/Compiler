@@ -32,5 +32,6 @@ int get_symbol(char* name);
 struct SymbolList* find_symbol(struct SymbolList* list, const char* name, int type);
 struct Symbol* name2symbol(const char* name, int type);
 struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier, int stars, int type, int length);
+struct Symbol* load_symbol(struct Symbol* symbol);
 
 #endif
