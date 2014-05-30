@@ -60,7 +60,7 @@ void jump_statement(struct JumpStatement* node)
             break;
             
         case 4:
-            label = load_symbol(expression_func(node->expression));
+            label = cast_symbol(load_symbol(expression_func(node->expression)), g_specifier, g_stars);
             ADDSTRING("  ret ");
             code_gen_type_specifier(label->specifier, 0, label->length, label->stars);
             ADDSTRING(" ");
@@ -270,13 +270,15 @@ void compound_statement(struct CompoundStatement* node)
 void function_definition(struct FunctionDefinition* node)
 {
     // to do
-    int storage = 0, specifier = 0, ret_qualifier = 0, point_quality = 0, stars;
+    int storage = 0, specifier = 0, ret_qualifier = 0, point_quality = 0, stars = 0;
     ADDSTRING("define ");
     declaration_specifiers(node->declarationSpecifiers, &storage, &ret_qualifier, &specifier, 0);
     ADDSTRING(" ");
     push_domain();
     declarator_func(node->declarator, &point_quality, '@', &stars, 0, 1);
     ADDSTRING(" nounwind ssp uwtable{\n");
+    g_specifier = specifier;
+    g_stars = stars;
     // to do: declaration_list
     compound_statement(node->compoundStatement);
     ADDSTRING("}\n");

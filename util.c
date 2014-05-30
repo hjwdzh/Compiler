@@ -3,6 +3,7 @@
 
 char *g_ptr = 0;
 char buf[20] = {0};
+int g_specifier = 0, g_stars = 0;
 
 void code_gen_with_header(char *filename)
 {

@@ -15,6 +15,7 @@
 
 extern char *g_ptr;
 extern char buf[20];
+extern int g_specifier, g_stars;
 
 void code_gen_with_header(char *filename);
 int len_gen_type_specifier(int val);
