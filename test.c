@@ -1,8 +1,12 @@
 
 int main()
 {
-	int a = 3;
-	int b = a + a;
-	int c = 3;
+	int a = 0;
+	int b = 3;
+	if (a)
+	{
+		b = 4;
+		}
+	b = 5;
 	return 0;
 }

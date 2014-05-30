@@ -187,7 +187,7 @@ struct Symbol* equality_symbol(struct Symbol* symbol1, struct Symbol* symbol2, i
             ADDSTRING(" = icmp ne ");
         }
     }
-    code_gen_type_specifier(symbol3->specifier,0, symbol3->length, symbol3->stars);
+    code_gen_type_specifier(symbol1->specifier,0, symbol1->length, symbol1->stars);
     ADDSTRING(" ");
     code_gen_symbol('%', symbol1);
     ADDSTRING(", ");

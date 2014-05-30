@@ -12,4 +12,6 @@ int dsoperate(int f, char type);
 double fsoperate(double f, char type);
 void operate_on_constant(struct Symbol* symbol1, struct Symbol* symbol2, char type);
 int parse_type(int specifier);
+struct Symbol* convert_to_logic(struct Symbol* symbol);
+
 #endif
