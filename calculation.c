@@ -84,7 +84,7 @@ struct Symbol* additive_symbol(struct Symbol* symbol1, struct Symbol* symbol2, i
     {
         ADDSTRING(" = ");
     }
-    if (type == 1)
+    if (type == 2)
     {
         ADDSTRING("sub ");
     }

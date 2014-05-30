@@ -115,6 +115,10 @@ struct Symbol* test_add(struct Symbol** symbol1, struct Symbol** symbol2, int ty
         printf("Invalid oprands: pointer cannot be subtracted!\n");
         exit(1);
     }
+    if (!(*symbol1)->stars && !(*symbol2)->stars)
+    {
+        return 0;
+    }
     if (type == 2)
     {
         if ((*symbol2)->stars)

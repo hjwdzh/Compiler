@@ -1301,14 +1301,13 @@ translation_unit
     ((struct TranslationUnit*)node)->type = 0;
     ((struct TranslationUnit*)node)->externalDeclaration = (struct ExternalDeclaration*)$1;
     $$ = node;
-    translation_unit_begin(node);
 }
 | translation_unit external_declaration{
     node = malloc(sizeof(struct TranslationUnit));
     ((struct TranslationUnit*)node)->type = 1;
     ((struct TranslationUnit*)node)->translationUnit = (struct TranslationUnit*)$1;
+    ((struct TranslationUnit*)node)->externalDeclaration = (struct ExternalDeclaration*)$2;
     $$ = node;
-    translation_unit_begin(node);
 }
 ;
 
@@ -1379,5 +1378,6 @@ int main(void)
 {
     freopen("/Users/skyer/Desktop/compiler/test.c", "r" ,stdin);
     yyparse();
+    translation_unit_begin(node);
     return 0;
 }
