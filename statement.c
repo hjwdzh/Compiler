@@ -277,7 +277,9 @@ void function_definition(struct FunctionDefinition* node)
     push_domain();
     char* ch = declarator_func(node->declarator, &point_quality, '@', &stars, 0, 1);
     back_domain();
-    new_symbol(ch, 0, 1, specifier, stars, 1, 0)->depth = 0;
+    struct Symbol* symbol = name2symbol(ch, 0);
+    if (!symbol || storage != symbol->storage || ret_qualifier != symbol->qualifier || specifier != symbol->specifier || stars != symbol->stars)
+        new_symbol(ch, 0, 1, specifier, stars, 1, 0)->depth = 0;
     forward_domain();
     ADDSTRING(" nounwind ssp uwtable{\n");
     g_specifier = specifier;

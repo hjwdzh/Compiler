@@ -51,7 +51,7 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
     }
     int orig = parse_type(symbol->specifier);
     int cur = parse_type(specifier);
-    if (orig == cur && symbol->stars == stars)
+    if (orig == cur && symbol->stars == stars && symbol->length == 0)
         return symbol;
     struct Symbol* newsymbol = 0;
     if (symbol->type == 2)
@@ -104,7 +104,7 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
             symbol = cast_symbol(symbol, 16, 0);
     }
     ADDSTRING("  ");
-    newsymbol = new_symbol("", 0, 0, specifier, symbol->stars, 0, symbol->length);
+    newsymbol = new_symbol("", 0, 0, specifier, symbol->stars, 0, 0);
     code_gen_symbol('%', newsymbol);
     ADDSTRING(" = ");
     if (symbol->stars && stars)
@@ -186,7 +186,7 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
     ADDSTRING(" ");
     code_gen_symbol('%', symbol);
     ADDSTRING(" to ");
-    code_gen_type_specifier(specifier, 0, symbol->length, stars);
+    code_gen_type_specifier(specifier, 0, newsymbol->length, stars);
     ADDSTRING("\n");
     newsymbol->specifier = specifier;
     newsymbol->stars = stars;

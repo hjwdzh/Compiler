@@ -1,10 +1,16 @@
 #ifndef _SYMBOL_JINGWEI_H_
 #define _SYMBOL_JINGWEI_H_
 
+struct GlobalBuffer {
+    char* buffer;
+    int isdefined;
+};
+
 struct Symbol {
     int qualifier, specifier, type, stars, storage, length, depth;
     char* name;
     struct Symbol* reference;
+    struct GlobalBuffer* globalBuffer;
     int prefix;
 };
 
@@ -37,5 +43,6 @@ struct SymbolList* find_symbol(struct SymbolList* list, const char* name, int ty
 struct Symbol* name2symbol(const char* name, int type);
 struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier, int stars, int type, int length);
 struct Symbol* load_symbol(struct Symbol* symbol);
+void new_global_buffer(struct Symbol* symbol, char* code, int isdefined);
 
 #endif

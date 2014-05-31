@@ -9,7 +9,9 @@ void argument_expression_list(struct ArgumentExpressionList* node)
     {
         argument_expression_list(node->argumentExpressionList);
     }
-    push_arg(assignment_expression(node->assignmentExpression));
+    struct Symbol* symbol = load_symbol(assignment_expression(node->assignmentExpression));
+    symbol = cast_symbol(symbol, symbol->specifier, symbol->stars);
+    push_arg(symbol);
 }
 
 

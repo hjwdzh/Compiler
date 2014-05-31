@@ -3,6 +3,8 @@
 
 #include "util.h"
 
+extern int current_type;
+
 void identifier_list(struct IdentifierList* node, char c);
 char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int *length, int isOutput);
 char* declarator_func(struct Declarator* declarator, int* qualifier, char c, int *stars, int* length, int isOutput);

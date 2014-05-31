@@ -207,12 +207,12 @@ void code_gen_symbol(char c, struct Symbol* symbol)
     }
 }
 
-struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int print_star)
+struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int isOutput, int isParameter)
 {
     char* ch;
     if (declarator->type == 0)
         *stars = numPoint(declarator->pointer);
-    if (print_star)
+    if (isOutput)
     {
         for (int i = 0; i < *stars; ++i)
         {
@@ -221,13 +221,24 @@ struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage
         *g_ptr = 0;
     }
     
-    ch = declarator_func(declarator, &specifier, c, stars, length, 0);
-    struct Symbol* symbol = new_symbol(ch, storage, qualifier, specifier, *stars, 0, *length);
-    if (symbol == 0)
+    ch = declarator_func(declarator, &specifier, c, stars, length, isOutput);
+    struct Symbol* symbol = name2symbol(ch, 0);
+    if (c == '@' && symbol)
     {
-        printf("symbol conflict!\n");
-        exit(0);
+        if (storage != symbol->storage || qualifier != symbol->qualifier || specifier != symbol->specifier
+            || *stars != symbol->stars || *length != symbol->length || current_type != symbol->type)
+        {
+            printf("symbol conflict!\n");
+            exit(0);
+        }
     }
+    else
+    {
+        symbol = new_symbol(ch, storage, qualifier, specifier, *stars, current_type, isParameter ? 0 : *length);
+        current_type = 0;
+    }
+    if (isOutput)
+        ADDSTRING(" ");
     code_gen_symbol(c, symbol);
     return symbol;
 }

@@ -31,6 +31,7 @@ void code_gen()
 {
     freopen("/Users/skyer/Desktop/compiler/test.ll", "w", stdout);
     code_gen_with_header("test.c");
+    code_gen_global_symbol();
     printf("%s", global_buffer);
     fclose(stdout);
 }

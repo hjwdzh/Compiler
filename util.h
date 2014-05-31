@@ -22,7 +22,7 @@ int len_gen_type_specifier(int val);
 const char* code_gen_type_specifier(int val, int isnsw, int length, int stars);
 int numPoint(struct Pointer* node);
 void code_gen_symbol(char c, struct Symbol* symbol);
-struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int print_star);
+struct Symbol* gen_new_symbol(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int isOutput, int isParameter);
 int len_gen_type_name(struct TypeName* node);
 void typename2specifier(struct TypeName* node, int *specifier, int *stars);
 int abstract2stars(struct AbstractDeclarator* node);

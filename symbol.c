@@ -71,7 +71,7 @@ void pop_arg()
     int i = 0;
     for (i = 0; i < Arg_ptr; ++i)
     {
-        code_gen_type_specifier(symbol_arg[i]->specifier, 0, 0, 0);
+        code_gen_type_specifier(symbol_arg[i]->specifier, 0, symbol_arg[i]->length, symbol_arg[i]->stars);
         ADDSTRING(" ");
         code_gen_symbol('%', symbol_arg[i]);
         if (i != Arg_ptr - 1)
@@ -103,7 +103,7 @@ void pop_para()
         }
         symbol_arg[i]->prefix--;
         ADDSTRING("  store ");
-        code_gen_type_specifier(symbol_arg[i]->specifier, 0, 0, 0);
+        code_gen_type_specifier(symbol_arg[i]->specifier, 0, 0, symbol_arg[i]->stars);
         ADDSTRING(" ");
         code_gen_symbol('%', symbol_arg[i]);
         ADDSTRING(", ");
@@ -256,4 +256,26 @@ struct Symbol* load_symbol(struct Symbol* symbol)
     ADDSTRING(buf);
     symbol1->reference = symbol;
     return symbol1;
+}
+
+void new_global_buffer(struct Symbol* symbol, char* code, int isdefined)
+{
+    symbol->globalBuffer = CREATE_NODE(struct GlobalBuffer);
+    memset(symbol->globalBuffer, 0, sizeof(struct GlobalBuffer));
+    symbol->globalBuffer->isdefined = isdefined;
+    symbol->globalBuffer->buffer = malloc(strlen(code)+1);
+    strcpy(symbol->globalBuffer->buffer, code);
+}
+
+void code_gen_global_symbol()
+{
+    struct SymbolList* l = cur->domain->symbols;
+    while (l)
+    {
+        if (l->symbol->type == 0)
+        {
+            printf("%s", l->symbol->globalBuffer->buffer);
+        }
+        l = l->next;
+    }
 }

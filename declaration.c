@@ -1,8 +1,12 @@
 #include "declaration.h"
 #include "specify.h"
 #include "expression.h"
+#include "buffer.h"
 #include "symbol.h"
 #include "assertion.h"
+
+char declaration_buffer[100];
+int current_type = 0;
 
 void identifier_list(struct IdentifierList* node, char c)
 {
@@ -19,19 +23,17 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
 {
     struct Symbol* symbol;
     char *ch = 0;
+    current_type = 0;
     switch (node->type)
     {
         case 0:
         case 1:
-            sprintf(buf, "%c%s", c, node->identifier);
-            if (isOutput)
-            {
-                ADDSTRING(buf);
-            }
             return node->identifier;
         case 2:
-            ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             *stars = *stars + 1;
+            if (isOutput)
+                ADDSTRING("*");
+            ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             symbol = constant_expression(node->constantExpression);
             test_integer(symbol);
             test_constant(symbol);
@@ -45,6 +47,8 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
             ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             if (isOutput)
             {
+                ADDSTRING("@");
+                ADDSTRING(ch);
                 *g_ptr++ = '(';
                 *g_ptr = 0;
             }
@@ -54,11 +58,14 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
                 *g_ptr++ = ')';
                 *g_ptr = 0;
             }
+            current_type = 1;
             break;
         case 5:
             ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             if (isOutput)
             {
+                ADDSTRING("@");
+                ADDSTRING(ch);
                 *g_ptr++ = '(';
                 *g_ptr = 0;
             }
@@ -68,10 +75,14 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
                 *g_ptr++ = ')';
                 *g_ptr = 0;
             }
+            current_type = 1;
             break;
         case 6:
             ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
+            ADDSTRING("@");
+            ADDSTRING(ch);
             ADDSTRING("()");
+            current_type = 1;
             break;
     }
     return ch;
@@ -107,10 +118,9 @@ void parameter_declaration(struct ParameterDeclaration* node, int *storage, int 
 {
     int stars = 0, length = 0;
     declaration_specifiers(node->declarationSpecifiers, storage, qualifier, specifier, 0);
-    ADDSTRING(" ");
     if (node->type == 0)
     {
-        push_arg(gen_new_symbol(node->declarator, '%', *storage, *qualifier, *specifier, &stars, &length, 0));
+        push_arg(gen_new_symbol(node->declarator, '%', *storage, *qualifier, *specifier, &stars, &length, 1, 1));
     }
     else if (node->type == 1)
         abstract_declarator(node->abstractDeclarator);
@@ -140,7 +150,7 @@ struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage
 {
     if (c == '%')
         ADDSTRING("  ");
-    struct Symbol* symbol = gen_new_symbol(declarator, c, storage, qualifier, specifier, stars, length, 0);
+    struct Symbol* symbol = gen_new_symbol(declarator, c, storage, qualifier, specifier, stars, length, 0, 0);
     if (c == '%')
     {
         ADDSTRING(" = alloca ");
@@ -153,7 +163,14 @@ struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage
         }
         else
         {
-            ADDSTRING(" = global ");
+            if (qualifier == 2)
+            {
+                ADDSTRING(" = constant ");
+            }
+            else
+            {
+                ADDSTRING(" = global ");
+            }
         }
     }
     code_gen_type_specifier(specifier,0,*length,*stars);
@@ -192,6 +209,10 @@ void initializer_func(struct Symbol* orig_symbol, struct Initializer* node, int 
 void init_declarator(struct InitDeclarator* node, char c, int storage, int qualifier, int specifier)
 {
     int stars = 0, length = 0;
+    if (c == '@')
+    {
+        push_buffer(declaration_buffer);
+    }
     struct Symbol* symbol = declarator_def(node->declarator, c, storage, qualifier, specifier, &stars, &length, node->type);
     if (c == '%')
     {
@@ -226,6 +247,24 @@ void init_declarator(struct InitDeclarator* node, char c, int storage, int quali
         else
             sprintf(buf, ", align %d\n", PTR_LENGTH);
         ADDSTRING(buf);
+        if (!symbol->globalBuffer)
+        {
+            new_global_buffer(symbol, declaration_buffer, node->type);
+        }
+        else
+        if (node->type == 1)
+        {
+            if (symbol->globalBuffer->isdefined)
+            {
+                printf("Symbol redefined!\n");
+                exit(1);
+            }
+            free(symbol->globalBuffer->buffer);
+            symbol->globalBuffer->buffer = malloc(strlen(declaration_buffer) + 1);
+            strcpy(symbol->globalBuffer->buffer, declaration_buffer);
+            symbol->globalBuffer->isdefined = 1;
+        }
+        pop_buffer();
     }
 }
 
@@ -240,6 +279,7 @@ void declaration_func(struct Declaration* node, char c)
 {
     int storage = 0, qualifier = 0, specifier = 0;
     declaration_specifiers(node->declarationSpecifiers, &storage, &qualifier, &specifier, 1);
+    // add global buffer
     if (node->type == 1)
     {
         init_declarator_list(node->initDeclaratorList, storage, qualifier, specifier, c);
