@@ -5,6 +5,8 @@
 #include "buffer.h"
 #include "symbol.h"
 
+int hasReturn = 0;
+
 void labeled_statement(struct LabeledStatement* node)
 {
     // to do
@@ -56,10 +58,12 @@ void jump_statement(struct JumpStatement* node)
             break;
             
         case 3:
+            hasReturn = 1;
             ADDSTRING("  ret void\n");
             break;
             
         case 4:
+            hasReturn = 1;
             label = cast_symbol(load_symbol(expression_func(node->expression)), g_specifier, g_stars);
             ADDSTRING("  ret ");
             code_gen_type_specifier(label->specifier, 0, label->length, label->stars);
@@ -82,6 +86,7 @@ struct Symbol* expression_statement(struct ExpressionStatement* node)
 
 void selection_statement(struct SelectionStatement* node)
 {
+    current_type = 0;
     if (node->type == 0)
     {
         struct Symbol* symbol = convert_to_logic(expression_func(node->expression));
@@ -133,6 +138,8 @@ void selection_statement(struct SelectionStatement* node)
         struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
         ADDSTRING("  br label ");
         code_gen_symbol('%', label3);
+        ADDSTRING("\n; <label>:");
+        code_gen_symbol(0, label3);
         ADDSTRING("\n");
         push_buffer(ch1);
         code_gen_symbol('%', label2);
@@ -150,6 +157,7 @@ void selection_statement(struct SelectionStatement* node)
 
 void iteration_statement(struct IterationStatement* node)
 {
+    current_type = 0;
     if (node->type == 0)
     {
         struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 3, 0);
@@ -313,12 +321,29 @@ void function_definition(struct FunctionDefinition* node)
     if (!symbol || storage != symbol->storage || ret_qualifier != symbol->qualifier || specifier != symbol->specifier || stars != symbol->stars)
         new_symbol(ch, 0, 1, specifier, stars, 1, 0)->depth = 0;
     forward_domain();
+    hasReturn = 0;
     ADDSTRING(" nounwind ssp uwtable{\n");
     g_specifier = specifier;
     g_stars = stars;
     pop_para();
     // to do: declaration_list
     compound_statement(node->compoundStatement);
+    if (!hasReturn)
+    {
+        if (specifier & 0x02)
+        {
+            ADDSTRING("  ret void\n");
+        }
+        else
+        {
+            ADDSTRING("  ret ");
+            struct Symbol* symbol = cast_symbol(new_symbol("0", 0, 1, 16, 0, 2, 0), specifier, stars);
+            code_gen_type_specifier(specifier, 0, 0, stars);
+            ADDSTRING(" ");
+            code_gen_symbol('%', symbol);
+            ADDSTRING("\n");
+        }
+    }
     ADDSTRING("}\n");
     pop_domain(1);
 }

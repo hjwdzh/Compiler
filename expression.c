@@ -2,6 +2,7 @@
 #include "specify.h"
 #include "assertion.h"
 #include "calculation.h"
+#include "buffer.h"
 
 void argument_expression_list(struct ArgumentExpressionList* node)
 {
@@ -529,16 +530,17 @@ struct Symbol* logical_and_expression(struct LogicalAndExpression* node)
     ADDSTRING("  br i1 ");
     code_gen_symbol('%', symbol3);
     struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 0, 0);
-    struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 0, 0);
     ADDSTRING(", label ");
     code_gen_symbol('%', label1);
     ADDSTRING(", label ");
-    code_gen_symbol('%', label2);
+    char *ch = g_ptr;
+    ADDSTRING("      ");
     ADDSTRING("\n; <label>:");
     code_gen_symbol(0, label1);
     ADDSTRING("\n");
     symbol1 = equality_symbol(symbol2, symbol3, 2, 1);
     ADDSTRING("  br label ");
+    struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 0, 0);
     code_gen_symbol('%', label2);
     ADDSTRING("\n; <label>:");
     code_gen_symbol(0, label2);
@@ -549,8 +551,12 @@ struct Symbol* logical_and_expression(struct LogicalAndExpression* node)
     ADDSTRING(" = phi i1 [ false, %0 ], [ ");
     code_gen_symbol('%', symbol1);
     ADDSTRING(", ");
-    code_gen_symbol(0, label2);
+    code_gen_symbol('%', label2);
     ADDSTRING(" ]\n");
+    push_buffer(ch);
+    code_gen_symbol('%', label2);
+    *g_ptr = ' ';
+    pop_buffer();
     return symbol2;
 }
 
@@ -570,7 +576,8 @@ struct Symbol* logical_or_expression(struct LogicalOrExpression* node)
     struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 0, 0);
     struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 0, 0);
     ADDSTRING(", label ");
-    code_gen_symbol('%', label2);
+    char *ch = g_ptr;
+    ADDSTRING("      ");
     ADDSTRING(", label ");
     code_gen_symbol('%', label1);
     ADDSTRING("\n; <label>:");
@@ -588,8 +595,12 @@ struct Symbol* logical_or_expression(struct LogicalOrExpression* node)
     ADDSTRING(" = phi i1 [ true, %0 ], [ ");
     code_gen_symbol('%', symbol1);
     ADDSTRING(", ");
-    code_gen_symbol(0, label2);
+    code_gen_symbol('%', label2);
     ADDSTRING(" ]\n");
+    push_buffer(ch);
+    code_gen_symbol('%', label2);
+    *g_ptr = ' ';
+    pop_buffer();
     return symbol2;
 }
 
@@ -601,23 +612,25 @@ struct Symbol* conditional_expression(struct ConditionalExpression* node)
     ADDSTRING("  br i1 ");
     code_gen_symbol('%', symbol);
     struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 0, 0);
-    struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 0, 0);
-    struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 0, 0);
     ADDSTRING(", label ");
     code_gen_symbol('%', label1);
     ADDSTRING(", label ");
-    code_gen_symbol('%', label2);
+    char *ch = g_ptr;
+    ADDSTRING("      ");
     ADDSTRING("\n; <label>:");
     code_gen_symbol(0, label1);
     ADDSTRING("\n");
     struct Symbol* symbol1 = load_symbol(expression_func(node->expression));
     ADDSTRING("  br label ");
-    code_gen_symbol('%', label3);
+    char *ch1 = g_ptr;
+    ADDSTRING("      ");
     ADDSTRING("\n; <label>:");
+    struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 0, 0);
     code_gen_symbol(0, label2);
     ADDSTRING("\n");
     struct Symbol* symbol2 = load_symbol(expression_func(node->expression));
     ADDSTRING("  br label ");
+    struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 0, 0);
     code_gen_symbol('%', label3);
     ADDSTRING("\n; <label>:");
     code_gen_symbol(0, label3);
@@ -629,12 +642,20 @@ struct Symbol* conditional_expression(struct ConditionalExpression* node)
     ADDSTRING(" [ ");
     code_gen_symbol('%', symbol1);
     ADDSTRING(", ");
-    code_gen_symbol(0, label1);
+    code_gen_symbol('%', label1);
     ADDSTRING(" ], [ ");
     code_gen_symbol('%', symbol2);
     ADDSTRING(", ");
-    code_gen_symbol(0, label2);
+    code_gen_symbol('%', label2);
     ADDSTRING(" ]\n");
+    push_buffer(ch);
+    code_gen_symbol('%', label2);
+    *g_ptr = ' ';
+    pop_buffer();
+    push_buffer(ch1);
+    code_gen_symbol('%', label3);
+    *g_ptr = ' ';
+    pop_buffer();
     return symbol;
 }
 
@@ -692,7 +713,6 @@ struct Symbol* assignment_expression(struct AssignmentExpression* node)
         symbol3 = symbol2;
     
     symbol3 = cast_symbol(symbol3, orig_symbol->specifier, orig_symbol->stars);
-//    orig_symbol = cast_symbol(orig_symbol, orig_symbol->specifier, orig_symbol->stars);
     ADDSTRING("  store ");
     code_gen_type_specifier(symbol1->specifier,0,symbol1->length,symbol1->stars);
     ADDSTRING(" ");

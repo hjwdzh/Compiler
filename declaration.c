@@ -173,7 +173,7 @@ struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage
             }
         }
     }
-    code_gen_type_specifier(specifier,0,*length,*stars);
+    code_gen_type_specifier(specifier,0,*length,*stars - (*length > 0));
     return symbol;
 }
 
