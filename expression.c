@@ -106,7 +106,8 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
                 argument_expression_list(node->argumentExpressionList);
             }
             newSymbol = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
-            code_gen_symbol('%', symbol);
+            ADDSTRING("  ");
+            code_gen_symbol('%', newSymbol);
             ADDSTRING(" = call ");
             code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
             ADDSTRING(" ");
@@ -116,7 +117,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             {
                 pop_arg();
             }
-            ADDSTRING(")");
+            ADDSTRING(")\n");
             *orig_symbol = 0;
             return newSymbol;
         case 4:

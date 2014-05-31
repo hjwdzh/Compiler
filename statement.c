@@ -275,10 +275,14 @@ void function_definition(struct FunctionDefinition* node)
     declaration_specifiers(node->declarationSpecifiers, &storage, &ret_qualifier, &specifier, 0);
     ADDSTRING(" ");
     push_domain();
-    declarator_func(node->declarator, &point_quality, '@', &stars, 0, 1);
+    char* ch = declarator_func(node->declarator, &point_quality, '@', &stars, 0, 1);
+    back_domain();
+    new_symbol(ch, 0, 1, specifier, stars, 1, 0)->depth = 0;
+    forward_domain();
     ADDSTRING(" nounwind ssp uwtable{\n");
     g_specifier = specifier;
     g_stars = stars;
+    pop_para();
     // to do: declaration_list
     compound_statement(node->compoundStatement);
     ADDSTRING("}\n");

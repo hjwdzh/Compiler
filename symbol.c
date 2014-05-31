@@ -23,7 +23,7 @@ void initialize_symbols() {
     path[Domain_ptr] = cur;
 }
 
-void release_domain_list(struct DomainList* list, int reset)
+void release_domain_list(struct DomainList* list)
 {
     struct SymbolList* l = list->domain->symbols;
     while (l)
@@ -31,14 +31,27 @@ void release_domain_list(struct DomainList* list, int reset)
         struct SymbolList* p = l;
         l = l->next;
         int key = get_symbol(p->symbol->name);
-        if (key != 0 || reset == 1)
+        symbols_prefix[key]--;
+        if (symbols_prefix[key] == 0)
         {
-            symbols_prefix[key]--;
-            if (symbols_prefix[key] == 0)
-            {
-                free(symbols_table[key]);
-                symbols_table[key] = 0;
-            }
+            free(symbols_table[key]);
+            symbols_table[key] = 0;
+        }
+        free(p->symbol->name);
+        free(p->symbol);
+        free(p);
+    }
+    l = list->domain->discard;
+    while (l)
+    {
+        struct SymbolList* p = l;
+        l = l->next;
+        int key = get_symbol(p->symbol->name);
+        symbols_prefix[key]--;
+        if (symbols_prefix[key] == 0)
+        {
+            free(symbols_table[key]);
+            symbols_table[key] = 0;
         }
         free(p->symbol->name);
         free(p->symbol);
@@ -67,6 +80,54 @@ void pop_arg()
     Arg_ptr = 0;
 }
 
+void pop_para()
+{
+    int i = 0;
+    for (i = 0; i < Arg_ptr; ++i)
+    {
+        symbol_arg[i]->prefix++;
+        ADDSTRING("  ");
+        code_gen_symbol('%', symbol_arg[i]);
+        ADDSTRING(" = alloca ");
+        code_gen_type_specifier(symbol_arg[i]->specifier, 0, symbol_arg[i]->length, symbol_arg[i]->stars);
+        ADDSTRING(", align ");
+        int len = len_gen_type_specifier(symbol_arg[i]->specifier);
+        if (symbol_arg[i]->stars)
+        {
+            PTR_LENGTH == 8 ? (ADDSTRING("8\n")):(ADDSTRING("4\n"));
+        }
+        else
+        {
+            sprintf(buf, "%d\n", len);
+            ADDSTRING(buf);
+        }
+        symbol_arg[i]->prefix--;
+        ADDSTRING("  store ");
+        code_gen_type_specifier(symbol_arg[i]->specifier, 0, 0, 0);
+        ADDSTRING(" ");
+        code_gen_symbol('%', symbol_arg[i]);
+        ADDSTRING(", ");
+        code_gen_type_specifier(symbol_arg[i]->specifier, 0, symbol_arg[i]->length, symbol_arg[i]->stars);
+        ADDSTRING("* ");
+        symbol_arg[i]->prefix++;
+        int key = get_symbol(symbol_arg[i]->name);
+        symbols_prefix[key]++;
+        code_gen_symbol('%', symbol_arg[i]);
+        ADDSTRING("\n");
+    }
+    Arg_ptr = 0;
+}
+
+void back_domain()
+{
+    cur = path[Domain_ptr - 1];
+}
+
+void forward_domain()
+{
+    cur = path[Domain_ptr];
+}
+
 void push_domain()
 {
     struct DomainList* node = CREATE_NODE(struct DomainList);
@@ -82,8 +143,20 @@ void pop_domain(int reset)
 {
     path[Domain_ptr--] = 0;
     if (reset)
-        symbols_prefix[0] = 1;
-    release_domain_list(cur, reset);
+        release_domain_list(cur);
+    else
+    {
+        struct SymbolList* symbol = cur->domain->symbols;
+        if (symbol)
+        {
+            while (symbol->next)
+            {
+                symbol = symbol->next;
+            }
+            symbol->next = path[Domain_ptr]->domain->discard;
+            path[Domain_ptr]->domain->discard = cur->domain->symbols;
+        }
+    }
     cur = path[Domain_ptr];
 }
 
@@ -108,7 +181,7 @@ struct SymbolList* find_symbol(struct SymbolList* list, const char* name, int ty
 {
     while (list)
     {
-        if (list->symbol->type == type && strcmp(list->symbol->name, name) == 0)
+        if (strcmp(list->symbol->name, name) == 0)
             return list;
         list = list->next;
     }

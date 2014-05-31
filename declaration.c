@@ -18,7 +18,7 @@ void identifier_list(struct IdentifierList* node, char c)
 char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* length, int isOutput)
 {
     struct Symbol* symbol;
-    char *ch;
+    char *ch = 0;
     switch (node->type)
     {
         case 0:
@@ -42,7 +42,7 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
             //to do: don't know how to do
             break;
         case 4:
-            direct_declarator(node->directDeclarator, c, stars, length, isOutput);
+            ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             if (isOutput)
             {
                 *g_ptr++ = '(';
@@ -56,7 +56,7 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
             }
             break;
         case 5:
-            direct_declarator(node->directDeclarator, c, stars, length, isOutput);
+            ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             if (isOutput)
             {
                 *g_ptr++ = '(';
@@ -70,11 +70,11 @@ char* direct_declarator(struct DirectDeclarator* node, char c, int *stars, int* 
             }
             break;
         case 6:
-            direct_declarator(node->directDeclarator, c, stars, length, isOutput);
+            ch = direct_declarator(node->directDeclarator, c, stars, length, isOutput);
             ADDSTRING("()");
             break;
     }
-    return 0;
+    return ch;
 }
 
 char* declarator_func(struct Declarator* declarator, int* qualifier, char c, int *stars, int *length, int isOutput)
@@ -105,13 +105,14 @@ void abstract_declarator(struct AbstractDeclarator* node)
 
 void parameter_declaration(struct ParameterDeclaration* node, int *storage, int *qualifier, int *specifier)
 {
-    int stars, length;
+    int stars = 0, length = 0;
     declaration_specifiers(node->declarationSpecifiers, storage, qualifier, specifier, 0);
-    if (node->type == 1)
+    ADDSTRING(" ");
+    if (node->type == 0)
     {
-        gen_new_symbol(node->declarator, '%', *storage, *qualifier, *specifier, &stars, &length, 0);
+        push_arg(gen_new_symbol(node->declarator, '%', *storage, *qualifier, *specifier, &stars, &length, 0));
     }
-    else if (node->type == 2)
+    else if (node->type == 1)
         abstract_declarator(node->abstractDeclarator);
 }
 
@@ -122,7 +123,7 @@ void parameter_list(struct ParameterList* node)
         parameter_list(node->parameterList);
         ADDSTRING(", ");
     }
-    int storage, qualifier, specifier;
+    int storage = 0, qualifier = 0, specifier = 0;
     parameter_declaration(node->parameterDeclaration, &storage, &qualifier, &specifier);
 }
 
@@ -202,7 +203,8 @@ void init_declarator(struct InitDeclarator* node, char c, int storage, int quali
     }
     if (node->type == 1)
     {
-        ADDSTRING(" ");
+        if (c == '@')
+            ADDSTRING(" ");
         initializer_func(symbol, node->initializer, specifier, c, stars);
     }
     if (c == '@')

@@ -16,6 +16,7 @@ struct DomainList;
 
 struct Domain {
     struct SymbolList* symbols;
+    struct SymbolList* discard;
 };
 
 struct DomainList {
@@ -23,8 +24,11 @@ struct DomainList {
     struct DomainList* next;
 };
 
+void back_domain();
+void forward_domain();
 void push_arg(struct Symbol* symbol);
 void pop_arg();
+void pop_para();
 void push_domain();
 void pop_domain(int reset);
 void initialize_symbols();

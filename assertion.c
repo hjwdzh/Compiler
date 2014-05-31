@@ -54,7 +54,7 @@ void test_integer2(struct Symbol* symbol1, struct Symbol* symbol2)
 
 void test_functionable(struct Symbol* symbol)
 {
-    if (symbol->type != 1)
+    if (!symbol || symbol->type != 1)
     {
         printf("Invalid call: symbol is not a function or function pointer!\n");
         exit(1);

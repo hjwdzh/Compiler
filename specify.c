@@ -44,6 +44,11 @@ int parse_type(int specifier){
 struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
 {
     char lbuf[20];
+    if (!symbol)
+    {
+        printf("Symbol undefined!\n");
+        exit(1);
+    }
     int orig = parse_type(symbol->specifier);
     int cur = parse_type(specifier);
     if (orig == cur && symbol->stars == stars)
