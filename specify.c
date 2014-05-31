@@ -58,6 +58,14 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
                 printf("Cannot cast float to double!\n");
                 exit(1);
             }
+            if (strcmp(symbol->name,"0") == 0)
+            {
+                free(symbol->name);
+                symbol->name = malloc(5);
+                strcpy(symbol->name, "null");
+            }
+            else
+            {
             push_buffer(lbuf);
             ADDSTRING("inttoptr (");
             if (PTR_LENGTH == 8)
@@ -68,15 +76,16 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
             {
                 ADDSTRING("i32 ");
             }
-            ADDSTRING(symbol->name);
-            ADDSTRING(" to ");
-            code_gen_type_specifier(specifier, 0, 0, stars);
-            ADDSTRING(")");
-            pop_buffer();
-            free(symbol->name);
-            long len = strlen(lbuf);
-            symbol->name = (char*)malloc(len+1);
-            strcpy(symbol->name, lbuf);
+                ADDSTRING(symbol->name);
+                ADDSTRING(" to ");
+                code_gen_type_specifier(specifier, 0, 0, stars);
+                ADDSTRING(")");
+                pop_buffer();
+                free(symbol->name);
+                long len = strlen(lbuf);
+                symbol->name = (char*)malloc(len+1);
+                strcpy(symbol->name, lbuf);
+            }
         }
         symbol->specifier = specifier;
         symbol->stars = stars;
@@ -174,6 +183,8 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
     ADDSTRING(" to ");
     code_gen_type_specifier(specifier, 0, symbol->length, stars);
     ADDSTRING("\n");
+    newsymbol->specifier = specifier;
+    newsymbol->stars = stars;
     return newsymbol;
 }
 

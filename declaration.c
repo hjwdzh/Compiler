@@ -135,17 +135,27 @@ void parameter_type_list(struct ParameterTypeList* node)
     }
 }
 
-struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length)
+struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int isdefined)
 {
-    ADDSTRING("  ");
+    if (c == '%')
+        ADDSTRING("  ");
     struct Symbol* symbol = gen_new_symbol(declarator, c, storage, qualifier, specifier, stars, length, 0);
-    ADDSTRING(" = alloca ");
-    code_gen_type_specifier(specifier,0,*length,*stars);
-    if (*stars == 0)
-        sprintf(buf, ", align %d\n", len_gen_type_specifier(specifier));
+    if (c == '%')
+    {
+        ADDSTRING(" = alloca ");
+    }
     else
-        sprintf(buf, ", align %d\n", PTR_LENGTH);
-    ADDSTRING(buf);
+    {
+        if (!isdefined)
+        {
+            ADDSTRING(" = common global ");
+        }
+        else
+        {
+            ADDSTRING(" = global ");
+        }
+    }
+    code_gen_type_specifier(specifier,0,*length,*stars);
     return symbol;
 }
 
@@ -171,16 +181,49 @@ void initializer_func(struct Symbol* orig_symbol, struct Initializer* node, int 
         ADDSTRING("\n");
     } else {
         // to do
+        struct Symbol* symbol = assignment_expression(node->assignmentExpression);
+        test_constant(symbol);
+        symbol = cast_symbol(symbol, specifier, stars);
+        ADDSTRING(symbol->name);
     }
 }
 
 void init_declarator(struct InitDeclarator* node, char c, int storage, int qualifier, int specifier)
 {
     int stars = 0, length = 0;
-    struct Symbol* symbol = declarator_def(node->declarator, c, storage, qualifier, specifier, &stars, &length);
+    struct Symbol* symbol = declarator_def(node->declarator, c, storage, qualifier, specifier, &stars, &length, node->type);
+    if (c == '%')
+    {
+        if (stars == 0)
+            sprintf(buf, ", align %d\n", len_gen_type_specifier(specifier));
+        else
+            sprintf(buf, ", align %d\n", PTR_LENGTH);
+        ADDSTRING(buf);
+    }
     if (node->type == 1)
     {
+        ADDSTRING(" ");
         initializer_func(symbol, node->initializer, specifier, c, stars);
+    }
+    if (c == '@')
+    {
+        if (node->type == 0)
+        {
+            ADDSTRING(" ");
+            if (stars)
+            {
+                ADDSTRING("null");
+            }
+            else
+            {
+                ADDSTRING("0");
+            }
+        }
+        if (stars == 0)
+            sprintf(buf, ", align %d\n", len_gen_type_specifier(specifier));
+        else
+            sprintf(buf, ", align %d\n", PTR_LENGTH);
+        ADDSTRING(buf);
     }
 }
 

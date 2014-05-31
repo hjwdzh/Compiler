@@ -65,13 +65,14 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
                 code_gen_symbol('@', symbol);
             else
                 code_gen_symbol('%', symbol);
-            ADDSTRING(", i32 0, ");
+            ADDSTRING(", ");
             ADDSTRING(PTR_LEN_TYPE);
             ADDSTRING(" ");
             code_gen_symbol(0, ref);
             ADDSTRING("\n");
             ADDSTRING("  ");
             newSymbol = new_symbol("", 0, 2, symbol->specifier, symbol->stars - 1, 0, 0);
+            newSymbol->reference = *orig_symbol;
             code_gen_symbol('%', newSymbol);
             ADDSTRING(" = load ");
             code_gen_type_specifier(symbol->specifier, 0, (*orig_symbol)->length, symbol->stars);
@@ -236,13 +237,13 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
             switch (node->unaryOperator) {
                 case 1:
                     test_pointable(symbol);
-                    symbol = load_symbol(symbol);
+                    symbol = symbol->reference;
                     *orig_symbol = 0;
                     symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars + 1, 0, 0);
                     ADDSTRING("  ");
                     code_gen_symbol('%', symbol1);
                     ADDSTRING(" = getelementptr inbounds ");
-                    code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
+                    code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol1->stars);
                     ADDSTRING(" ");
                     code_gen_symbol('%', symbol);
                     ADDSTRING(", ");
@@ -254,6 +255,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                     symbol = load_symbol(symbol);
                     symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars - 1, 0, symbol->length);
                     *orig_symbol = symbol1;
+                    symbol1->reference = symbol;
                     ADDSTRING("  ");
                     code_gen_symbol('%', symbol1);
                     ADDSTRING(" = load ");

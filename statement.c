@@ -271,7 +271,7 @@ void function_definition(struct FunctionDefinition* node)
 {
     // to do
     int storage = 0, specifier = 0, ret_qualifier = 0, point_quality = 0, stars = 0;
-    ADDSTRING("define ");
+    ADDSTRING("\ndefine ");
     declaration_specifiers(node->declarationSpecifiers, &storage, &ret_qualifier, &specifier, 0);
     ADDSTRING(" ");
     push_domain();

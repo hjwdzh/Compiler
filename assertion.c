@@ -63,7 +63,7 @@ void test_functionable(struct Symbol* symbol)
 
 void test_pointable(struct Symbol* symbol)
 {
-    if (symbol->type == 2)
+    if (symbol->reference == 0)
     {
         printf("Invalid oprands: value cannot be pointed!\n");
         exit(1);

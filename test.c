@@ -1,6 +1,8 @@
-
+int* c = 0;
+int d = 3;
 int main()
 {
-	short b;
+	int* b;
+	c = &(b[1]);
 	return b;
 }

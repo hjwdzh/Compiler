@@ -4,6 +4,7 @@
 struct Symbol {
     int qualifier, specifier, type, stars, storage, length, depth;
     char* name;
+    struct Symbol* reference;
     int prefix;
 };
 
@@ -15,7 +16,6 @@ struct DomainList;
 
 struct Domain {
     struct SymbolList* symbols;
-    struct DomainList* children;
 };
 
 struct DomainList {

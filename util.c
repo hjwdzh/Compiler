@@ -192,6 +192,8 @@ int numPoint(struct Pointer* node)
 
 void code_gen_symbol(char c, struct Symbol* symbol)
 {
+    if (symbol->depth == 0)
+        c = '@';
     if (c > 0 && symbol->type != 2)
         *g_ptr++ = c;
     if (symbol->name && symbol->name[0] != 0)

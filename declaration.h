@@ -11,7 +11,7 @@ void abstract_declarator(struct AbstractDeclarator* node);
 void parameter_declaration(struct ParameterDeclaration* node, int *storage, int *qualifier, int *specifier);
 void parameter_list(struct ParameterList* node);
 void parameter_type_list(struct ParameterTypeList* node);
-struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length);
+struct Symbol* declarator_def(struct Declarator* declarator, char c, int storage, int qualifier, int specifier, int* stars, int *length, int isdefined);
 void initializer_func(struct Symbol* orig_symbol, struct Initializer* node, int specifier, char c, int stars);
 void init_declarator(struct InitDeclarator* node, char c, int storage, int qualifier, int specifier);
 void init_declarator_list(struct InitDeclaratorList* node, int storage, int qualifier, int specifier, char c);

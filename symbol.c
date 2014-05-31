@@ -23,6 +23,31 @@ void initialize_symbols() {
     path[Domain_ptr] = cur;
 }
 
+void release_domain_list(struct DomainList* list, int reset)
+{
+    struct SymbolList* l = list->domain->symbols;
+    while (l)
+    {
+        struct SymbolList* p = l;
+        l = l->next;
+        int key = get_symbol(p->symbol->name);
+        if (key != 0 || reset == 1)
+        {
+            symbols_prefix[key]--;
+            if (symbols_prefix[key] == 0)
+            {
+                free(symbols_table[key]);
+                symbols_table[key] = 0;
+            }
+        }
+        free(p->symbol->name);
+        free(p->symbol);
+        free(p);
+    }
+    free(list->domain);
+    free(list);
+}
+
 void push_arg(struct Symbol* symbol)
 {
     symbol_arg[Arg_ptr++] = symbol;
@@ -58,6 +83,8 @@ void pop_domain(int reset)
     path[Domain_ptr--] = 0;
     if (reset)
         symbols_prefix[0] = 1;
+    release_domain_list(cur, reset);
+    cur = path[Domain_ptr];
 }
 
 int get_symbol(char* name)
@@ -72,7 +99,8 @@ int get_symbol(char* name)
             return key;
         ++key;
     }
-    symbols_table[key] = name;
+    symbols_table[key] = malloc(strlen(name)+1);
+    strcpy(symbols_table[key], name);
     return key;
 }
 
@@ -124,6 +152,8 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
         printf("symbol %s redefined\n", name);
         exit(1);
     }
+    if (name && strlen(name))
+        symbol->reference = symbol;
     key =get_symbol(name);
     symbol->prefix = symbols_prefix[key]++;
     symbol->prefix++;
@@ -151,5 +181,6 @@ struct Symbol* load_symbol(struct Symbol* symbol)
     int l = len_gen_type_specifier(symbol1->specifier);
     sprintf(buf, "%d\n", l);
     ADDSTRING(buf);
+    symbol1->reference = symbol;
     return symbol1;
 }
