@@ -116,19 +116,19 @@ struct Symbol* shift_symbol(struct Symbol* symbol1, struct Symbol* symbol2, int 
     code_gen_symbol('%', symbol3);
     if ((symbol1->specifier & (1 << 9)) > 0)
     {
-        ADDSTRING(" = lsh ");
+        ADDSTRING(" = lsh");
     }
     else
     {
-        ADDSTRING(" = ash ");
+        ADDSTRING(" = ash");
     }
     if (type == 1)
     {
-        ADDSTRING("l");
+        ADDSTRING("l ");
     }
     else
     {
-        ADDSTRING("r");
+        ADDSTRING("r ");
     }
     code_gen_type_specifier(symbol3->specifier,0,symbol3->length,symbol3->stars);
     ADDSTRING(" ");

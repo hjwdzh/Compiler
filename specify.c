@@ -49,6 +49,11 @@ struct Symbol* cast_symbol(struct Symbol* symbol, int specifier, int stars)
         printf("Symbol undefined!\n");
         exit(1);
     }
+    if (symbol->specifier & 0x02)
+    {
+        printf("Void cannot be casted!\n");
+        exit(1);
+    }
     int orig = parse_type(symbol->specifier);
     int cur = parse_type(specifier);
     if (orig == cur && symbol->stars == stars && symbol->length == 0)

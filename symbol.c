@@ -103,7 +103,7 @@ void pop_para()
         }
         symbol_arg[i]->prefix--;
         ADDSTRING("  store ");
-        code_gen_type_specifier(symbol_arg[i]->specifier, 0, 0, symbol_arg[i]->stars);
+        code_gen_type_specifier(symbol_arg[i]->specifier, 0, symbol_arg[i]->length, symbol_arg[i]->stars);
         ADDSTRING(" ");
         code_gen_symbol('%', symbol_arg[i]);
         ADDSTRING(", ");
@@ -155,6 +155,16 @@ void pop_domain(int reset)
             }
             symbol->next = path[Domain_ptr]->domain->discard;
             path[Domain_ptr]->domain->discard = cur->domain->symbols;
+        }
+        symbol = cur->domain->discard;
+        if (symbol)
+        {
+            while (symbol->next)
+            {
+                symbol = symbol->next;
+            }
+            symbol->next = path[Domain_ptr]->domain->discard;
+            path[Domain_ptr]->domain->discard = cur->domain->discard;
         }
     }
     cur = path[Domain_ptr];

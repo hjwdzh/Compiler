@@ -181,7 +181,7 @@ void initializer_func(struct Symbol* orig_symbol, struct Initializer* node, int 
 {
     if (c == '%') {
         //assignment expression to do
-        struct Symbol* symbol = assignment_expression(node->assignmentExpression);
+        struct Symbol* symbol = load_symbol(assignment_expression(node->assignmentExpression));
         int specifier = orig_symbol->specifier;
         symbol = cast_symbol(symbol, specifier, orig_symbol->stars);
         ADDSTRING("  store ");

@@ -86,47 +86,62 @@ void selection_statement(struct SelectionStatement* node)
     {
         struct Symbol* symbol = convert_to_logic(expression_func(node->expression));
         struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
         ADDSTRING("  br i1 ");
         code_gen_symbol('%',symbol);
         ADDSTRING(", label ");
         code_gen_symbol('%', label1);
         ADDSTRING(", label ");
-        code_gen_symbol('%', label2);
+        char* ch = g_ptr;
+        ADDSTRING("      ");
         ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label1);
         ADDSTRING("\n");
         statement_func(node->s1);
         ADDSTRING("  br label ");
+        struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
         code_gen_symbol('%', label2);
         ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label2);
         ADDSTRING("\n");
+        push_buffer(ch);
+        code_gen_symbol('%', label2);
+        *g_ptr = ' ';
+        pop_buffer();
     } else if (node->type == 1)
     {
         struct Symbol* symbol = convert_to_logic(expression_func(node->expression));
         struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
         ADDSTRING("  br i1 ");
         code_gen_symbol('%',symbol);
         ADDSTRING(", label ");
         code_gen_symbol('%', label1);
         ADDSTRING(", label ");
-        code_gen_symbol('%', label2);
+        char* ch1 = g_ptr;
+        ADDSTRING("      ");
         ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label1);
         ADDSTRING("\n");
         statement_func(node->s1);
         ADDSTRING("  br label ");
-        code_gen_symbol(0, label3);
+        char* ch2 = g_ptr;
+        ADDSTRING("      ");
         ADDSTRING("\n; <label>:");
+        struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
         code_gen_symbol(0, label2);
         ADDSTRING("\n");
         statement_func(node->s2);
+        struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
         ADDSTRING("  br label ");
-        code_gen_symbol(0, label3);
+        code_gen_symbol('%', label3);
         ADDSTRING("\n");
+        push_buffer(ch1);
+        code_gen_symbol('%', label2);
+        *g_ptr = ' ';
+        pop_buffer();
+        push_buffer(ch2);
+        code_gen_symbol('%', label3);
+        *g_ptr = ' ';
+        pop_buffer();
     } else
     {
         //switch to do:
@@ -142,15 +157,16 @@ void iteration_statement(struct IterationStatement* node)
         code_gen_symbol('%', label1);
         ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label1);
+        ADDSTRING("\n");
         struct Symbol* symbol = convert_to_logic(expression_func(node->expression));
         struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        ADDSTRING("\n  br i1 ");
+        ADDSTRING("  br i1 ");
         code_gen_symbol('%', symbol);
         ADDSTRING(", label ");
         code_gen_symbol('%', label2);
         ADDSTRING(", label ");
-        code_gen_symbol('%', label3);
+        char* ch1 = g_ptr;
+        ADDSTRING("       ");
         ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label2);
         ADDSTRING("\n");
@@ -158,8 +174,13 @@ void iteration_statement(struct IterationStatement* node)
         ADDSTRING("  br label ");
         code_gen_symbol('%', label1);
         ADDSTRING("\n; <label>:");
+        struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
         code_gen_symbol(0, label3);
         ADDSTRING("\n");
+        push_buffer(ch1);
+        code_gen_symbol('%', label3);
+        *g_ptr = ' ';
+        pop_buffer();
     } else if (node->type == 1)
     {
         struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 3, 0);
@@ -188,6 +209,7 @@ void iteration_statement(struct IterationStatement* node)
         ADDSTRING("\n");
     } else
     {
+        char* ch = 0, *ch1 = 0;
         expression_statement(node->s1);
         struct Symbol* label1 = new_symbol("", 0, 0, 0, 0, 3, 0);
         ADDSTRING("  br label ");
@@ -196,20 +218,21 @@ void iteration_statement(struct IterationStatement* node)
         code_gen_symbol(0, label1);
         ADDSTRING("\n");
         struct Symbol* condition = expression_statement(node->s2);
-        struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
         if (condition)
         {
             condition = convert_to_logic(condition);
             ADDSTRING("  br i1 ");
             code_gen_symbol('%', condition);
             ADDSTRING(", label ");
-            code_gen_symbol('%', label2);
+            ch1 = g_ptr;
+            ADDSTRING("      ");
             ADDSTRING(", label ");
-            code_gen_symbol('%', label3);
+            ch = g_ptr;
+            ADDSTRING("      ");
             ADDSTRING("\n");
         }
         ADDSTRING("; <label>:");
+        struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
         code_gen_symbol(0, label2);
         ADDSTRING("\n");
         statement_func(node->statement);
@@ -217,9 +240,18 @@ void iteration_statement(struct IterationStatement* node)
             expression_func(node->expression);
         ADDSTRING("  br label ");
         code_gen_symbol('%', label1);
-        ADDSTRING("\n;<label>:");
+        struct Symbol* label3 = new_symbol("", 0, 0, 0, 0, 3, 0);
+        ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label3);
         ADDSTRING("\n");
+        push_buffer(ch1);
+        code_gen_symbol('%', label2);
+        *g_ptr = ' ';
+        pop_buffer();
+        push_buffer(ch);
+        code_gen_symbol('%', label3);
+        *g_ptr = ' ';
+        pop_buffer();
     }
 }
 

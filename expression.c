@@ -49,7 +49,7 @@ struct Symbol* primary_expression(struct PrimaryExpression* node, struct Symbol*
 
 struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol** orig_symbol)
 {
-    struct Symbol* symbol, *ref, *newSymbol, *symbol1;
+    struct Symbol* symbol, *ref, *newSymbol = 0, *symbol1;
     switch (node->type) {
         case 0:
             return primary_expression(node->primaryExpression, orig_symbol);
@@ -67,10 +67,13 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
                 code_gen_symbol('@', symbol);
             else
                 code_gen_symbol('%', symbol);
+            if (symbol->length)
+                ADDSTRING(", i32 0");
             ADDSTRING(", ");
-            ADDSTRING(PTR_LEN_TYPE);
+            test_integer(ref);
+            code_gen_type_specifier(ref->specifier, 0, 0, 0);
             ADDSTRING(" ");
-            code_gen_symbol(0, ref);
+            code_gen_symbol('%', ref);
             ADDSTRING("\n");
             ADDSTRING("  ");
             newSymbol = new_symbol("", 0, 2, symbol->specifier, symbol->stars - 1, 0, 0);
@@ -107,10 +110,15 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             {
                 argument_expression_list(node->argumentExpressionList);
             }
-            newSymbol = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
-            ADDSTRING("  ");
-            code_gen_symbol('%', newSymbol);
-            ADDSTRING(" = call ");
+            if (!(symbol->specifier & 0x02)) {
+                newSymbol = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
+                ADDSTRING("  ");
+                code_gen_symbol('%', newSymbol);
+                ADDSTRING(" = call ");
+            } else {
+                ADDSTRING("  call ");
+                newSymbol = symbol;
+            }
             code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
             ADDSTRING(" ");
             code_gen_symbol('%', symbol);
@@ -194,8 +202,10 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                 symbol1 = test_calculable(symbol, '-');
             if (symbol1)
                 return symbol1;
+            ADDSTRING("  ");
             symbol1 = new_symbol("", symbol->storage, symbol->qualifier, symbol->specifier, symbol->stars - 1, 0, symbol->length);
             code_gen_symbol('%', symbol1);
+            ADDSTRING(" = ");
             if ((symbol->specifier & (3 << 6)) > 0)
             {
                 ADDSTRING("f");
@@ -209,6 +219,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                 ADDSTRING("sub ");
             }
             code_gen_type_specifier(symbol->specifier,1,symbol->length, symbol->stars);
+            ADDSTRING(" ");
             code_gen_symbol('%', symbol);
             ADDSTRING(", ");
             if ((symbol->specifier & (3 << 6)) > 0)
@@ -219,7 +230,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
             {
                 ADDSTRING("1\n");
             }
-            ADDSTRING("store ");
+            ADDSTRING("  store ");
             code_gen_type_specifier(symbol->specifier,0,symbol->length, symbol->stars);
             ADDSTRING(" ");
             code_gen_symbol('%', symbol1);
@@ -242,7 +253,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                     test_pointable(symbol);
                     symbol = symbol->reference;
                     *orig_symbol = 0;
-                    symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars + 1, 0, 0);
+                    symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars + 1, 0, symbol->length);
                     ADDSTRING("  ");
                     code_gen_symbol('%', symbol1);
                     ADDSTRING(" = getelementptr inbounds ");
@@ -263,6 +274,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                     code_gen_symbol('%', symbol1);
                     ADDSTRING(" = load ");
                     code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
+                    ADDSTRING(" ");
                     code_gen_symbol('%', symbol);
                     ADDSTRING(" ");
                     code_gen_symbol('%', symbol);
@@ -348,10 +360,14 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
         case 4:
             *orig_symbol = 0;
             symbol = unary_expression(node->unaryExpression, orig_symbol);
-            if (symbol->stars)
+            if (symbol->stars > (symbol->length > 0))
                 len = PTR_LENGTH;
             else
+            {
                 len = len_gen_type_specifier(symbol->specifier);
+                if (symbol->length)
+                    len *= symbol->length;
+            }
             sprintf(buf, "%d", len);
             symbol1 = new_symbol(buf, 0, 2, 4, 0, 2, 0);
             break;
@@ -676,12 +692,13 @@ struct Symbol* assignment_expression(struct AssignmentExpression* node)
         symbol3 = symbol2;
     
     symbol3 = cast_symbol(symbol3, orig_symbol->specifier, orig_symbol->stars);
+//    orig_symbol = cast_symbol(orig_symbol, orig_symbol->specifier, orig_symbol->stars);
     ADDSTRING("  store ");
     code_gen_type_specifier(symbol1->specifier,0,symbol1->length,symbol1->stars);
     ADDSTRING(" ");
     code_gen_symbol('%', symbol3);
     ADDSTRING(", ");
-    code_gen_type_specifier(symbol1->specifier,0,symbol1->length,symbol1->stars);
+    code_gen_type_specifier(orig_symbol->specifier,0,orig_symbol->length,orig_symbol->stars);
     ADDSTRING("* ");
     code_gen_symbol('%',orig_symbol);
     ADDSTRING(", align ");
