@@ -131,7 +131,11 @@ L?\"(\\.|[^\\"])*\" { count();
                               s3 = 1 - s3;
                           else
                               if (s3 == 1 && yytext[s2] == 'n')
-                                  ptr[s1++] = 13;
+                              {
+                                  ptr[s1++] = '\\';
+                                  ptr[s1++] = '0';
+                                  ptr[s1++] = 'A';
+                              }
                               else
                                   ptr[s1++] = yytext[s2];
                       }

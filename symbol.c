@@ -294,6 +294,7 @@ void code_gen_global_symbol()
 
 struct Symbol* new_string(char* string)
 {
+    int i = 0;
     struct StringTable* l = literals;
     if (!l)
     {
@@ -321,16 +322,31 @@ struct Symbol* new_string(char* string)
             }
         }
     }
-    sprintf(buf, "getelementptr inbounds ([%lu x i8]* @.str%d, i32 0, i32 0)", strlen(l->string) + 1, l->prefix - 1);
+    long len = strlen(l->string);
+    long len1 = len;
+    for (i = 0; i < len1 - 1; ++i)
+    {
+        if (l->string[i] == '\\' && l->string[i + 1] == '0')
+            len -= 2;
+    }
+    sprintf(buf, "getelementptr inbounds ([%lu x i8]* @.str%d, i32 0, i32 0)", len + 1, l->prefix - 1);
     return new_symbol(buf, 0, 1, 4, 1, 2, 0);
 }
 
 void code_gen_string()
 {
     struct StringTable* l = literals;
+    int i = 0;
     while (l)
     {
-        printf("@.str%d = private unnamed_addr constant [%lu x i8] c\"%s\\00\", align 1\n", l->prefix - 1, 1 + strlen(l->string), l->string);
+        long len = strlen(l->string);
+        long len1 = len;
+        for (i = 0; i < len1 - 1; ++i)
+        {
+            if (l->string[i] == '\\' && l->string[i + 1] == '0')
+                len -= 2;
+        }
+        printf("@.str%d = private unnamed_addr constant [%lu x i8] c\"%s\\00\", align 1\n", l->prefix - 1, 1 + len, l->string);
         l = l->next;
     }
 }
