@@ -9,14 +9,14 @@ int symbols_prefix[150000] = {0};
 static char* symbols_table[150000] = {0};
 
 static struct DomainList* path[100];
-static struct Symbol* symbol_arg[50];
+struct Symbol* symbol_arg[50];
 static struct Symbol* symbol_arg_buf[50];
 static int Arg_ptr = 0, Arg_buf_ptr = 0;
 static int Domain_ptr = 0;
 static struct DomainList* cur = 0;
 static struct StringTable* literals = 0;
 
-struct Symbol *g_symbol_printf = 0, *g_symbol_scanf = 0, *g_symbol_malloc = 0;
+struct Symbol *g_symbol_printf = 0, *g_symbol_scanf = 0, *g_symbol_malloc = 0, *g_symbol_free = 0;
 
 void initialize_symbols() {
     symbols_prefix[0] = 0;
@@ -48,6 +48,11 @@ void initialize_symbols() {
     g_symbol_malloc->parameterlist = CREATE_NODE(struct SymbolList);
     memset(g_symbol_malloc->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_malloc->parameterlist->symbol = new_symbol(".malloc", 0, 2, 32, 0, 2, 0);
+    
+    g_symbol_free = new_symbol("free", 0, 2, 16, 0, 1, 0);
+    g_symbol_free->parameterlist = CREATE_NODE(struct SymbolList);
+    memset(g_symbol_free->parameterlist, 0, sizeof(struct SymbolList));
+    g_symbol_free->parameterlist->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
     
     memset(symbol_arg_buf, 0, sizeof(symbol_arg_buf));
 }

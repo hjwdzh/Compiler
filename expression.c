@@ -126,13 +126,24 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
                 ADDSTRING("  call ");
                 newSymbol = symbol;
             }
-            code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
-            ADDSTRING(" ");
-            if (strcmp(symbol->name, "printf") == 0 || strcmp(symbol->name, "scanf") == 0)
+            if (strcmp(symbol->name, "free") != 0)
             {
-                ADDSTRING("(i8*, ...)* ");
+                code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
+                ADDSTRING(" ");
+                if (strcmp(symbol->name, "printf") == 0 || strcmp(symbol->name, "scanf") == 0)
+                {
+                    ADDSTRING("(i8*, ...)* ");
+                }
+                code_gen_symbol('@', symbol);
             }
-            code_gen_symbol('@', symbol);
+            else
+            {
+                ADDSTRING("i32 (");
+                code_gen_type_specifier(symbol_arg[0]->specifier, 0, 0, symbol_arg[0]->stars);
+                ADDSTRING(", ...)* bitcast (i32 (...)* @free to i32 (");
+                code_gen_type_specifier(symbol_arg[0]->specifier, 0, 0, symbol_arg[0]->stars);
+                ADDSTRING(", ...)*)");
+            }
             ADDSTRING("(");
             if (node->type == 3)
             {

@@ -299,4 +299,5 @@ void code_gen_standard_declaration()
     printf("declare i32 @printf(i8*, ...)\n");
     printf("declare i32 @scanf(i8*, ...)\n");
     printf("declare i8* @malloc(i64)\n");
+    printf("declare i32 @free(...)\n");
 }

@@ -60,7 +60,7 @@ void new_global_buffer(struct Symbol* symbol, char* code, int isdefined);
 struct Symbol* new_string(char* string);
 
 extern struct Symbol *g_symbol_printf, *g_symbol_scanf, *g_symbol_malloc;
-
+extern struct Symbol* symbol_arg[50];
 extern int symbols_prefix[150000];
 
 #endif
