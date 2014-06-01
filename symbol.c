@@ -30,19 +30,26 @@ void initialize_symbols() {
     
     g_symbol_printf = new_symbol("printf", 0, 2, 16, 0, 1, 0);
     g_symbol_printf->parameterlist = CREATE_NODE(struct SymbolList);
+    memset(g_symbol_printf->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_printf->parameterlist->next = CREATE_NODE(struct SymbolList);
+    memset(g_symbol_printf->parameterlist->next, 0, sizeof(struct Symbol));
     g_symbol_printf->parameterlist->symbol = new_symbol(".print1", 0, 2, 4, 1, 2, 0);
     g_symbol_printf->parameterlist->next->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
 
     g_symbol_scanf = new_symbol("scanf", 0, 2, 16, 0, 1, 0);
     g_symbol_scanf->parameterlist = CREATE_NODE(struct SymbolList);
+    memset(g_symbol_scanf->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_scanf->parameterlist->next = CREATE_NODE(struct SymbolList);
+    memset(g_symbol_scanf->parameterlist->next, 0, sizeof(struct Symbol));
     g_symbol_scanf->parameterlist->symbol = new_symbol(".scanf1", 0, 2, 4, 1, 2, 0);
     g_symbol_scanf->parameterlist->next->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
 
     g_symbol_malloc = new_symbol("malloc", 0, 2, 4, 1, 1, 0);
     g_symbol_malloc->parameterlist = CREATE_NODE(struct SymbolList);
+    memset(g_symbol_malloc->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_malloc->parameterlist->symbol = new_symbol(".malloc", 0, 2, 32, 0, 2, 0);
+    
+    memset(symbol_arg_buf, 0, sizeof(symbol_arg_buf));
 }
 
 void release_domain_list(struct DomainList* list)
@@ -106,8 +113,8 @@ void reverse_arg_buf()
     for (int i = 0; i < (Arg_buf_ptr >> 1); ++i)
     {
         struct Symbol* symbol = symbol_arg_buf[i];
-        symbol_arg_buf[i] = symbol_arg_buf[Arg_ptr - i - 1];
-        symbol_arg_buf[Arg_ptr - i - 1] = symbol;
+        symbol_arg_buf[i] = symbol_arg_buf[Arg_buf_ptr - i - 1];
+        symbol_arg_buf[Arg_buf_ptr - i - 1] = symbol;
     }
 }
 
@@ -127,13 +134,13 @@ void cast_arg()
     reverse_arg_buf();
     for (int i = 0; i < Arg_ptr; ++i)
     {
-        if (strcmp(symbol_arg_buf[i]->name, "...") == 0)
-            break;
         if (!symbol_arg_buf[i])
         {
             printf("Invalid call!\n");
             exit(1);
         }
+        if (symbol_arg_buf[i]->name && strcmp(symbol_arg_buf[i]->name, "...") == 0)
+            break;
         symbol_arg[i] = cast_symbol(symbol_arg[i], symbol_arg_buf[i]->specifier, symbol_arg_buf[i]->stars);
     }
     for (int i = 0; i < Arg_buf_ptr; ++i)
@@ -162,6 +169,9 @@ void pop_para(struct Symbol* symbol)
     for (i = 0; i < Arg_ptr; ++i)
     {
         struct SymbolList* symbols = CREATE_NODE(struct SymbolList);
+        memset(symbols, 0, sizeof(struct SymbolList));
+        symbols->symbol = CREATE_NODE(struct Symbol);
+        memcpy(symbols->symbol, symbol_arg[i], sizeof(struct Symbol));
         symbols->next = symbol->parameterlist;
         symbol->parameterlist = symbols;
     }
@@ -385,6 +395,7 @@ struct Symbol* new_string(char* string)
     if (!l)
     {
         l = CREATE_NODE(struct StringTable);
+        memset(l, 0, sizeof(struct StringTable));
         l->string = string;
         l->prefix = 1;
         literals = l;
@@ -401,6 +412,7 @@ struct Symbol* new_string(char* string)
             else
             {
                 l->next = CREATE_NODE(struct StringTable);
+                memset(l->next, 0, sizeof(struct StringTable));
                 l->next->string = string;
                 l->next->prefix = l->prefix + 1;
                 l = l->next;
@@ -416,7 +428,7 @@ struct Symbol* new_string(char* string)
             len -= 2;
     }
     sprintf(buf, "getelementptr inbounds ([%lu x i8]* @.str%d, i32 0, i32 0)", len + 1, l->prefix - 1);
-    return new_symbol(buf, 0, 1, 4, 1, 2, 0);
+    return new_symbol(buf, 0, 2, 4, 1, 2, 0);
 }
 
 void code_gen_string()

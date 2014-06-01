@@ -1,4 +1,4 @@
-#include "expression.h"
+ #include "expression.h"
 #include "specify.h"
 #include "assertion.h"
 #include "calculation.h"
@@ -743,7 +743,7 @@ struct Symbol* assignment_expression(struct AssignmentExpression* node)
 struct Symbol* expression_func(struct Expression* node)
 {
     if (node->type == 1)
-        return expression_func(node->expression);
+        expression_func(node->expression);
     return assignment_expression(node->assignmentExpression);
 }
 

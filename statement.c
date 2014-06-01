@@ -103,8 +103,10 @@ void selection_statement(struct SelectionStatement* node)
         code_gen_symbol(0, label1);
         ADDSTRING("\n");
         statement_func(node->s1);
+        ADDSTRING("  br label ");
         struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        ADDSTRING("; <label>:");
+        code_gen_symbol('%', label2);
+        ADDSTRING("\n; <label>:");
         code_gen_symbol(0, label2);
         ADDSTRING("\n");
         push_buffer(ch);

@@ -35,6 +35,8 @@ void type_qualifier_list(struct TypeQualifierList* node, int *qualifier)
 }
 
 int parse_type(int specifier){
+    if (specifier == 0)
+        return 0;
     int i = 0;
     while (!(specifier & (1 << i)))
         ++i;

@@ -11,11 +11,8 @@ struct SymbolList;
 struct Symbol {
     int qualifier, specifier, type, stars, storage, length, depth;
     char* name;
-    union
-    {
-        struct SymbolList* parameterlist;
-        struct Symbol* reference;
-    };
+    struct SymbolList* parameterlist;
+    struct Symbol* reference;
     struct GlobalBuffer* globalBuffer;
     int prefix;
 };
