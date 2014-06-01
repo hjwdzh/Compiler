@@ -38,7 +38,7 @@ struct Symbol* primary_expression(struct PrimaryExpression* node, struct Symbol*
             *orig_symbol = new_symbol(buf, 0, 2, 1 << 7, 0, 2, 0);
             return *orig_symbol;
         case 5:
-            *orig_symbol = new_symbol(node->literal, 0, 2, (PTR_LENGTH == 8) ? (1 << 5) : (1 << 4), 1, 2, 0);
+            *orig_symbol = new_string(node->literal);
             return *orig_symbol;
         case 6:
             *orig_symbol = expression_func(node->expression);
@@ -106,6 +106,8 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
         case 2:
         case 3:
             symbol = postfix_expression(node->postfixExpression, orig_symbol);
+            if (!symbol)
+                symbol = call_standard_func(node->postfixExpression);
             test_functionable(symbol);
             if (node->type == 3)
             {
@@ -122,7 +124,11 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             }
             code_gen_type_specifier(symbol->specifier, 0, symbol->length, symbol->stars);
             ADDSTRING(" ");
-            code_gen_symbol('%', symbol);
+            if (strcmp(symbol->name, "printf") == 0 || strcmp(symbol->name, "scanf") == 0)
+            {
+                ADDSTRING("(i8*, ...)* ");
+            }
+            code_gen_symbol('@', symbol);
             ADDSTRING("(");
             if (node->type == 3)
             {

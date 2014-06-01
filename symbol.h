@@ -30,6 +30,12 @@ struct DomainList {
     struct DomainList* next;
 };
 
+struct StringTable {
+    char* string;
+    int prefix;
+    struct StringTable* next;
+};
+
 void back_domain();
 void forward_domain();
 void push_arg(struct Symbol* symbol);
@@ -44,5 +50,6 @@ struct Symbol* name2symbol(const char* name, int type);
 struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier, int stars, int type, int length);
 struct Symbol* load_symbol(struct Symbol* symbol);
 void new_global_buffer(struct Symbol* symbol, char* code, int isdefined);
+struct Symbol* new_string(char* string);
 
 #endif

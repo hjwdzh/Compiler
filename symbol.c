@@ -1,5 +1,6 @@
 #include "symbol.h"
 #include "util.h"
+#include "buffer.h"
 #define PRIME 99997
 #define CREATE_NODE(a) ( (a*)malloc(sizeof(a)) )
 
@@ -11,6 +12,7 @@ static struct Symbol* symbol_arg[50];
 static int Arg_ptr = 0;
 static int Domain_ptr = 0;
 static struct DomainList* cur = 0;
+static struct StringTable* literals = 0;
 
 void initialize_symbols() {
     symbols_prefix[0] = 0;
@@ -286,6 +288,49 @@ void code_gen_global_symbol()
         {
             printf("%s", l->symbol->globalBuffer->buffer);
         }
+        l = l->next;
+    }
+}
+
+struct Symbol* new_string(char* string)
+{
+    struct StringTable* l = literals;
+    if (!l)
+    {
+        l = CREATE_NODE(struct StringTable);
+        l->string = string;
+        l->prefix = 1;
+        literals = l;
+    }
+    else
+    {
+        while (l)
+        {
+            int t = strcmp(l->string, string);
+            if (t == 0)
+                break;
+            if (l->next)
+                l = l->next;
+            else
+            {
+                l->next = CREATE_NODE(struct StringTable);
+                l->next->string = string;
+                l->next->prefix = l->prefix + 1;
+                l = l->next;
+                break;
+            }
+        }
+    }
+    sprintf(buf, "getelementptr inbounds ([%lu x i8]* @.str%d, i32 0, i32 0)", strlen(l->string) + 1, l->prefix - 1);
+    return new_symbol(buf, 0, 1, 4, 1, 2, 0);
+}
+
+void code_gen_string()
+{
+    struct StringTable* l = literals;
+    while (l)
+    {
+        printf("@.str%d = private unnamed_addr constant [%lu x i8] c\"%s\\00\", align 1\n", l->prefix - 1, 1 + strlen(l->string), l->string);
         l = l->next;
     }
 }

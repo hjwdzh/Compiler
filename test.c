@@ -1,6 +1,7 @@
-int test()
+int main()
 {
 	int i;
-	(i + 1) && (i + 2);
+	scanf("%d", &i);
+	printf("%d", i);
 }
 

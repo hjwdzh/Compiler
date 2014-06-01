@@ -14,11 +14,13 @@
 #define ADDSTRING(a) {strcpy(g_ptr,a), g_ptr += strlen(a);}
 
 extern char *g_ptr;
-extern char buf[20];
+extern char buf[1000];
 extern int g_specifier, g_stars;
 
 void code_gen_with_header(char *filename);
 int len_gen_type_specifier(int val);
+void code_gen_global_symbol();
+void code_gen_string();
 const char* code_gen_type_specifier(int val, int isnsw, int length, int stars);
 int numPoint(struct Pointer* node);
 void code_gen_symbol(char c, struct Symbol* symbol);
@@ -27,5 +29,7 @@ int len_gen_type_name(struct TypeName* node);
 void typename2specifier(struct TypeName* node, int *specifier, int *stars);
 int abstract2stars(struct AbstractDeclarator* node);
 int direct2stars(struct DirectAbstractDeclarator* node);
+struct Symbol* call_standard_func(struct PostfixExpression* node);
+void code_gen_standard_declaration();
 
 #endif
