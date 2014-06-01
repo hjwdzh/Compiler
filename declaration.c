@@ -142,6 +142,7 @@ void parameter_type_list(struct ParameterTypeList* node)
     parameter_list(node->parameterList);
     if (node->type == 1)
     {
+        push_arg(new_symbol("...", 0, 2, 16, 0, 2, 0));
         ADDSTRING(", ...");
     }
 }

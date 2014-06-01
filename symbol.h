@@ -6,10 +6,16 @@ struct GlobalBuffer {
     int isdefined;
 };
 
+struct SymbolList;
+
 struct Symbol {
     int qualifier, specifier, type, stars, storage, length, depth;
     char* name;
-    struct Symbol* reference;
+    union
+    {
+        struct SymbolList* parameterlist;
+        struct Symbol* reference;
+    };
     struct GlobalBuffer* globalBuffer;
     int prefix;
 };
@@ -40,7 +46,11 @@ void back_domain();
 void forward_domain();
 void push_arg(struct Symbol* symbol);
 void pop_arg();
-void pop_para();
+void push_arg_buf(struct Symbol* symbol);
+void cast_arg();
+void reverse_arg_buf();
+void pop_para(struct Symbol* symbol);
+void reverse_arg();
 void push_domain();
 void pop_domain(int reset);
 void initialize_symbols();
@@ -51,5 +61,9 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
 struct Symbol* load_symbol(struct Symbol* symbol);
 void new_global_buffer(struct Symbol* symbol, char* code, int isdefined);
 struct Symbol* new_string(char* string);
+
+extern struct Symbol *g_symbol_printf, *g_symbol_scanf, *g_symbol_malloc;
+
+extern int symbols_prefix[150000];
 
 #endif

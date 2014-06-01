@@ -3,16 +3,22 @@
 #include "assertion.h"
 #include "calculation.h"
 #include "buffer.h"
+#include "symbol.h"
 
-void argument_expression_list(struct ArgumentExpressionList* node)
+void argument_expression_list(struct ArgumentExpressionList* node, struct SymbolList* symbol)
 {
-    if (node->type == 1)
+    while (symbol)
     {
-        argument_expression_list(node->argumentExpressionList);
+        push_arg_buf(symbol->symbol);
+        symbol = symbol->next;
     }
-    struct Symbol* symbol = load_symbol(assignment_expression(node->assignmentExpression));
-    symbol = cast_symbol(symbol, symbol->specifier, symbol->stars);
-    push_arg(symbol);
+    push_arg(load_symbol(assignment_expression(node->assignmentExpression)));
+    while (node->type == 1)
+    {
+        node = node->argumentExpressionList;
+        push_arg(load_symbol(assignment_expression(node->assignmentExpression)));
+    }
+    cast_arg();
 }
 
 
@@ -106,12 +112,10 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
         case 2:
         case 3:
             symbol = postfix_expression(node->postfixExpression, orig_symbol);
-            if (!symbol)
-                symbol = call_standard_func(node->postfixExpression);
             test_functionable(symbol);
             if (node->type == 3)
             {
-                argument_expression_list(node->argumentExpressionList);
+                argument_expression_list(node->argumentExpressionList, symbol->parameterlist);
             }
             if (!(symbol->specifier & 0x02)) {
                 newSymbol = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars, 0, symbol->length);
@@ -135,7 +139,7 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
                 pop_arg();
             }
             ADDSTRING(")\n");
-            *orig_symbol = 0;
+            *orig_symbol = newSymbol;
             return newSymbol;
         case 4:
         case 5:
@@ -204,9 +208,9 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
             symbol = load_symbol(unary_expression(node->unaryExpression, orig_symbol));
             test_changeable(*orig_symbol);
             if (node->type == 2)
-                symbol1 = test_calculable(symbol, '+');
-            else
                 symbol1 = test_calculable(symbol, '-');
+            else
+                symbol1 = test_calculable(symbol, '+');
             if (symbol1)
                 return symbol1;
             ADDSTRING("  ");
@@ -217,7 +221,7 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
             {
                 ADDSTRING("f");
             }
-            if (node->type == 2)
+            if (node->type == 1)
             {
                 ADDSTRING("add ");
             }
@@ -397,8 +401,9 @@ struct Symbol* cast_expression(struct CastExpression* node)
     struct Symbol* symbol = 0;
     if (node->type == 0)
         return unary_expression(node->unaryExpression, &symbol);
-    int specifier, stars;
+    int specifier = 0, stars = 0;
     typename2specifier(node->typeName, &specifier, &stars);
+    symbol = cast_expression(node->castExpression);
     symbol = load_symbol(symbol);
     symbol = cast_symbol(symbol, specifier, stars);
     return cast_expression(node->castExpression);

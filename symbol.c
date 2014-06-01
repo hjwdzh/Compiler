@@ -1,18 +1,22 @@
-#include "symbol.h"
+//#include "symbol.h"
 #include "util.h"
+#include "specify.h"
 #include "buffer.h"
 #define PRIME 99997
 #define CREATE_NODE(a) ( (a*)malloc(sizeof(a)) )
 
-static int symbols_prefix[150000] = {0};
+int symbols_prefix[150000] = {0};
 static char* symbols_table[150000] = {0};
 
 static struct DomainList* path[100];
 static struct Symbol* symbol_arg[50];
-static int Arg_ptr = 0;
+static struct Symbol* symbol_arg_buf[50];
+static int Arg_ptr = 0, Arg_buf_ptr = 0;
 static int Domain_ptr = 0;
 static struct DomainList* cur = 0;
 static struct StringTable* literals = 0;
+
+struct Symbol *g_symbol_printf = 0, *g_symbol_scanf = 0, *g_symbol_malloc = 0;
 
 void initialize_symbols() {
     symbols_prefix[0] = 0;
@@ -23,6 +27,22 @@ void initialize_symbols() {
     cur->domain = CREATE_NODE(struct Domain);
     memset(cur->domain, 0, sizeof(struct Domain));
     path[Domain_ptr] = cur;
+    
+    g_symbol_printf = new_symbol("printf", 0, 2, 16, 0, 1, 0);
+    g_symbol_printf->parameterlist = CREATE_NODE(struct SymbolList);
+    g_symbol_printf->parameterlist->next = CREATE_NODE(struct SymbolList);
+    g_symbol_printf->parameterlist->symbol = new_symbol(".print1", 0, 2, 4, 1, 2, 0);
+    g_symbol_printf->parameterlist->next->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
+
+    g_symbol_scanf = new_symbol("scanf", 0, 2, 16, 0, 1, 0);
+    g_symbol_scanf->parameterlist = CREATE_NODE(struct SymbolList);
+    g_symbol_scanf->parameterlist->next = CREATE_NODE(struct SymbolList);
+    g_symbol_scanf->parameterlist->symbol = new_symbol(".scanf1", 0, 2, 4, 1, 2, 0);
+    g_symbol_scanf->parameterlist->next->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
+
+    g_symbol_malloc = new_symbol("malloc", 0, 2, 4, 1, 1, 0);
+    g_symbol_malloc->parameterlist = CREATE_NODE(struct SymbolList);
+    g_symbol_malloc->parameterlist->symbol = new_symbol(".malloc", 0, 2, 32, 0, 2, 0);
 }
 
 void release_domain_list(struct DomainList* list)
@@ -34,6 +54,10 @@ void release_domain_list(struct DomainList* list)
         l = l->next;
         int key = get_symbol(p->symbol->name);
         symbols_prefix[key]--;
+        if (key != 0 && p->symbol->type == 3)
+        {
+            --symbols_prefix[0];
+        }
         if (symbols_prefix[key] == 0)
         {
             free(symbols_table[key]);
@@ -50,6 +74,10 @@ void release_domain_list(struct DomainList* list)
         l = l->next;
         int key = get_symbol(p->symbol->name);
         symbols_prefix[key]--;
+        if (key != 0 && p->symbol->type == 3)
+        {
+            --symbols_prefix[0];
+        }
         if (symbols_prefix[key] == 0)
         {
             free(symbols_table[key]);
@@ -63,9 +91,54 @@ void release_domain_list(struct DomainList* list)
     free(list);
 }
 
+void reverse_arg()
+{
+    for (int i = 0; i < (Arg_ptr >> 1); ++i)
+    {
+        struct Symbol* symbol = symbol_arg[i];
+        symbol_arg[i] = symbol_arg[Arg_ptr - i - 1];
+        symbol_arg[Arg_ptr - i - 1] = symbol;
+    }
+}
+
+void reverse_arg_buf()
+{
+    for (int i = 0; i < (Arg_buf_ptr >> 1); ++i)
+    {
+        struct Symbol* symbol = symbol_arg_buf[i];
+        symbol_arg_buf[i] = symbol_arg_buf[Arg_ptr - i - 1];
+        symbol_arg_buf[Arg_ptr - i - 1] = symbol;
+    }
+}
+
+void push_arg_buf(struct Symbol* symbol)
+{
+    symbol_arg_buf[Arg_buf_ptr++] = symbol;
+}
+
 void push_arg(struct Symbol* symbol)
 {
     symbol_arg[Arg_ptr++] = symbol;
+}
+
+void cast_arg()
+{
+    reverse_arg();
+    reverse_arg_buf();
+    for (int i = 0; i < Arg_ptr; ++i)
+    {
+        if (strcmp(symbol_arg_buf[i]->name, "...") == 0)
+            break;
+        if (!symbol_arg_buf[i])
+        {
+            printf("Invalid call!\n");
+            exit(1);
+        }
+        symbol_arg[i] = cast_symbol(symbol_arg[i], symbol_arg_buf[i]->specifier, symbol_arg_buf[i]->stars);
+    }
+    for (int i = 0; i < Arg_buf_ptr; ++i)
+        symbol_arg_buf[i] = 0;
+    Arg_buf_ptr = 0;
 }
 
 void pop_arg()
@@ -76,15 +149,22 @@ void pop_arg()
         code_gen_type_specifier(symbol_arg[i]->specifier, 0, symbol_arg[i]->length, symbol_arg[i]->stars);
         ADDSTRING(" ");
         code_gen_symbol('%', symbol_arg[i]);
+        symbol_arg[i] = 0;
         if (i != Arg_ptr - 1)
             ADDSTRING(", ");
     }
     Arg_ptr = 0;
 }
 
-void pop_para()
+void pop_para(struct Symbol* symbol)
 {
     int i = 0;
+    for (i = 0; i < Arg_ptr; ++i)
+    {
+        struct SymbolList* symbols = CREATE_NODE(struct SymbolList);
+        symbols->next = symbol->parameterlist;
+        symbol->parameterlist = symbols;
+    }
     for (i = 0; i < Arg_ptr; ++i)
     {
         symbol_arg[i]->prefix++;
@@ -116,6 +196,7 @@ void pop_para()
         symbols_prefix[key]++;
         code_gen_symbol('%', symbol_arg[i]);
         ADDSTRING("\n");
+        symbol_arg[i] = 0;
     }
     Arg_ptr = 0;
 }
@@ -252,6 +333,11 @@ struct Symbol* new_symbol(char* name, int storage, int qualifier, int specifier,
 
 struct Symbol* load_symbol(struct Symbol* symbol)
 {
+    if (!symbol)
+    {
+        printf("Symbol cannot be loaded\n");
+        exit(1);
+    }
     struct Symbol *symbol1;
     if (!symbol->name || strlen(symbol->name) == 0 || symbol->type == 2)
         return symbol;

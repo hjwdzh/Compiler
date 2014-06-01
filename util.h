@@ -29,7 +29,6 @@ int len_gen_type_name(struct TypeName* node);
 void typename2specifier(struct TypeName* node, int *specifier, int *stars);
 int abstract2stars(struct AbstractDeclarator* node);
 int direct2stars(struct DirectAbstractDeclarator* node);
-struct Symbol* call_standard_func(struct PostfixExpression* node);
 void code_gen_standard_declaration();
 
 #endif

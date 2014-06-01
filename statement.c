@@ -22,6 +22,7 @@ void labeled_statement(struct LabeledStatement* node)
             ADDSTRING("\n; <label>:");
             code_gen_symbol(0, label);
             ADDSTRING("\n");
+            symbols_prefix[0]++;
             label->name[0] = c;
             statement_func(node->statement);
             break;
@@ -102,10 +103,8 @@ void selection_statement(struct SelectionStatement* node)
         code_gen_symbol(0, label1);
         ADDSTRING("\n");
         statement_func(node->s1);
-        ADDSTRING("  br label ");
         struct Symbol* label2 = new_symbol("", 0, 0, 0, 0, 3, 0);
-        code_gen_symbol('%', label2);
-        ADDSTRING("\n; <label>:");
+        ADDSTRING("; <label>:");
         code_gen_symbol(0, label2);
         ADDSTRING("\n");
         push_buffer(ch);
@@ -319,13 +318,16 @@ void function_definition(struct FunctionDefinition* node)
     back_domain();
     struct Symbol* symbol = name2symbol(ch, 0);
     if (!symbol || storage != symbol->storage || ret_qualifier != symbol->qualifier || specifier != symbol->specifier || stars != symbol->stars)
-        new_symbol(ch, 0, 1, specifier, stars, 1, 0)->depth = 0;
+    {
+        symbol = new_symbol(ch, 0, 2, specifier, stars, 1, 0);
+        symbol->depth = 0;
+    }
     forward_domain();
     hasReturn = 0;
     ADDSTRING(" nounwind ssp uwtable{\n");
     g_specifier = specifier;
     g_stars = stars;
-    pop_para();
+    pop_para(symbol);
     // to do: declaration_list
     compound_statement(node->compoundStatement);
     if (!hasReturn)

@@ -4,7 +4,6 @@
 char *g_ptr = 0;
 char buf[1000] = {0};
 int g_specifier = 0, g_stars = 0;
-int usescanf = 0, useprintf = 0, usemalloc = 0;
 
 void code_gen_with_header(char *filename)
 {
@@ -285,48 +284,19 @@ void typename2specifier(struct TypeName* node, int *specifier, int *stars)
         }
         ptr = ptr->specifierQualifierList;
     }
+    if (ptr->type < 2)
+    {
+        *specifier |= (1 << ptr->typeSpecifier);
+    }
     if (node->type == 1)
     {
         *stars = abstract2stars(node->abstractDeclarator);
     }
 }
 
-struct Symbol* call_standard_func(struct PostfixExpression* node)
-{
-    if (node->type == 0 && node->primaryExpression->type == 0)
-    {
-        char *literal = node->primaryExpression->identifier;
-        if (strcmp(literal, "printf") == 0)
-        {
-            useprintf = 1;
-            return new_symbol("printf", 0, 1, 16, 0, 1, 0);
-        }
-        if (strcmp(literal, "scanf") == 0)
-        {
-            usescanf = 1;
-            return new_symbol("scanf", 0, 1, 16, 0, 1, 0);
-        }
-        if (strcmp(literal, "malloc") == 0)
-        {
-            usemalloc = 1;
-            return new_symbol("malloc", 0, 1, 32, 0, 1, 0);
-        }
-    }
-    return 0;
-}
-
 void code_gen_standard_declaration()
 {
-    if (useprintf)
-    {
-        printf("declare i32 @printf(i8*, ...)\n");
-    }
-    if (usescanf)
-    {
-        printf("declare i32 @scanf(i8*, ...)\n");
-    }
-    if (usemalloc)
-    {
-        printf("declare i8* @malloc(i64)\n");
-    }
+    printf("declare i32 @printf(i8*, ...)\n");
+    printf("declare i32 @scanf(i8*, ...)\n");
+    printf("declare i8* @malloc(i64)\n");
 }
