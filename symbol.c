@@ -27,12 +27,12 @@ void initialize_symbols() {
     cur->domain = CREATE_NODE(struct Domain);
     memset(cur->domain, 0, sizeof(struct Domain));
     path[Domain_ptr] = cur;
-    
+
     g_symbol_printf = new_symbol("printf", 0, 2, 16, 0, 1, 0);
     g_symbol_printf->parameterlist = CREATE_NODE(struct SymbolList);
     memset(g_symbol_printf->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_printf->parameterlist->next = CREATE_NODE(struct SymbolList);
-    memset(g_symbol_printf->parameterlist->next, 0, sizeof(struct Symbol));
+    memset(g_symbol_printf->parameterlist->next, 0, sizeof(struct SymbolList));
     g_symbol_printf->parameterlist->symbol = new_symbol(".print1", 0, 2, 4, 1, 2, 0);
     g_symbol_printf->parameterlist->next->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
 
@@ -40,7 +40,7 @@ void initialize_symbols() {
     g_symbol_scanf->parameterlist = CREATE_NODE(struct SymbolList);
     memset(g_symbol_scanf->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_scanf->parameterlist->next = CREATE_NODE(struct SymbolList);
-    memset(g_symbol_scanf->parameterlist->next, 0, sizeof(struct Symbol));
+    memset(g_symbol_scanf->parameterlist->next, 0, sizeof(struct SymbolList));
     g_symbol_scanf->parameterlist->symbol = new_symbol(".scanf1", 0, 2, 4, 1, 2, 0);
     g_symbol_scanf->parameterlist->next->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
 
@@ -48,12 +48,12 @@ void initialize_symbols() {
     g_symbol_malloc->parameterlist = CREATE_NODE(struct SymbolList);
     memset(g_symbol_malloc->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_malloc->parameterlist->symbol = new_symbol(".malloc", 0, 2, 32, 0, 2, 0);
-    
+
     g_symbol_free = new_symbol("free", 0, 2, 16, 0, 1, 0);
     g_symbol_free->parameterlist = CREATE_NODE(struct SymbolList);
     memset(g_symbol_free->parameterlist, 0, sizeof(struct SymbolList));
     g_symbol_free->parameterlist->symbol = new_symbol("...", 0, 2, 16, 0, 2, 0);
-    
+
     memset(symbol_arg_buf, 0, sizeof(symbol_arg_buf));
 }
 

@@ -1,0 +1,108 @@
+# depslib dependency file v1.0
+1401725311 source:/home/hjw/Compiler/assertion.c
+	"util.h"
+	"symbol.h"
+	"specify.h"
+	"calculation.h"
+
+1401725311 /home/hjw/Compiler/util.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"types.h"
+	"symbol.h"
+
+1401725311 /home/hjw/Compiler/types.h
+
+1401725311 /home/hjw/Compiler/symbol.h
+
+1401725311 /home/hjw/Compiler/specify.h
+	"util.h"
+
+1401725311 /home/hjw/Compiler/calculation.h
+
+1401725522 source:/home/hjw/Compiler/buffer.c
+	"util.h"
+	"buffer.h"
+
+1401725311 /home/hjw/Compiler/buffer.h
+	<stdio.h>
+
+1401725311 source:/home/hjw/Compiler/calculation.c
+	"calculation.h"
+	"specify.h"
+	"assertion.h"
+
+1401725311 /home/hjw/Compiler/assertion.h
+
+1401725311 source:/home/hjw/Compiler/declaration.c
+	"declaration.h"
+	"specify.h"
+	"expression.h"
+	"buffer.h"
+	"symbol.h"
+	"assertion.h"
+
+1401725311 /home/hjw/Compiler/declaration.h
+	"util.h"
+
+1401725311 /home/hjw/Compiler/expression.h
+	"util.h"
+
+1401725311 source:/home/hjw/Compiler/expression.c
+	"expression.h"
+	"specify.h"
+	"assertion.h"
+	"calculation.h"
+	"buffer.h"
+	"symbol.h"
+
+1401725527 source:/home/hjw/Compiler/lex.yy.c
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<stdlib.h>
+	<inttypes.h>
+	<stdio.h>
+	"y.tab.h"
+	<unistd.h>
+
+1401725527 /home/hjw/Compiler/y.tab.h
+
+1401725311 source:/home/hjw/Compiler/specify.c
+	"specify.h"
+	"buffer.h"
+	"calculation.h"
+
+1401725311 source:/home/hjw/Compiler/statement.c
+	"statement.h"
+	"expression.h"
+	"specify.h"
+	"declaration.h"
+	"buffer.h"
+	"symbol.h"
+
+1401725311 /home/hjw/Compiler/statement.h
+	"util.h"
+
+1401725311 source:/home/hjw/Compiler/symbol.c
+	"util.h"
+	"specify.h"
+	"buffer.h"
+
+1401725311 source:/home/hjw/Compiler/util.c
+	"util.h"
+	"declaration.h"
+
+1401725527 source:/home/hjw/Compiler/y.tab.c
+	"types.h"
+	"statement.h"
+	<stddef.h>
+	<libintl.h>
+	<alloca.h>
+	<malloc.h>
+	<stdlib.h>
+	<stdlib.h>
+	<stdio.h>
+	<stdio.h>
+

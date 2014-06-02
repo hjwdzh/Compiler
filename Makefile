@@ -1,7 +1,7 @@
 compiler:	   
 	   lex c.l
 	   yacc -dv c.y
-	   cc declaration.c assertion.c expression.c lex.yy.c specify.c statement.c symbol.c util.c buffer.c y.tab.c calculation.c -o compiler
+	   cc declaration.c assertion.c expression.c lex.yy.c specify.c statement.c symbol.c util.c buffer.c y.tab.c calculation.c -std=c99 -o compiler
 
 declaration: specify.o expression.o
 

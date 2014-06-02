@@ -1376,7 +1376,7 @@ char *s;
 
 int main(void)
 {
-    freopen("test.c", "r" ,stdin);
+    freopen("/Users/skyer/Desktop/compiler/test.c", "r" ,stdin);
     yyparse();
     translation_unit_begin(node);
     return 0;

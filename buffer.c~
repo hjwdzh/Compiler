@@ -29,7 +29,7 @@ void pop_buffer()
 
 void code_gen()
 {
-    freopen("test.ll", "w", stdout);
+    freopen("/Users/skyer/Desktop/compiler/test.ll", "w", stdout);
     code_gen_with_header("test.c");
     code_gen_string();
     code_gen_global_symbol();
