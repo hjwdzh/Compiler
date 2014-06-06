@@ -1,6 +1,7 @@
 %{
     #include "types.h"
     #include "statement.h"
+    #include "buffer.h"
     void* node;
 %}
 %union {
@@ -1374,10 +1375,16 @@ char *s;
     return 1;
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
-    freopen("test.c", "r" ,stdin);
+    strcpy(name1, argv[1]);
+    strcpy(name2, argv[3]);
+    freopen(name1, "r" ,stdin);
     yyparse();
     translation_unit_begin(node);
     return 0;
+
+
+
+
 }
