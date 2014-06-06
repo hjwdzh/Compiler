@@ -15,9 +15,9 @@
 	#define TARGET_TRIPLE "i686-pc-mingw32"
 #else
 	#ifdef MAC_OS_PLATFORM
-		#define TARGET_TRIPLE "x86-64-apple-macosx10.8.0"
+		#define TARGET_TRIPLE "x86_64-apple-macosx10.8.0"
 	#else
-		#define TARGET_TRIPLE "linux"
+		#define TARGET_TRIPLE "i386-pc-linux-gnu"
 	#endif
 #endif
 #define PTR_LENGTH 8
