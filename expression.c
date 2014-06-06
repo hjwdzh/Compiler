@@ -65,6 +65,8 @@ struct Symbol* postfix_expression(struct PostfixExpression* node, struct Symbol*
             test_referenceable(symbol);
             ref = load_symbol(expression_func(node->expression));
             *orig_symbol = new_symbol("", symbol->storage, 0, symbol->specifier, symbol->stars - 1, 0, 0);
+            if (symbol->stars == 1)
+                (*orig_symbol)->specifier = 32;
             ADDSTRING("  ");
             code_gen_symbol('%', *orig_symbol);
             ADDSTRING(" = getelementptr inbounds ");
@@ -289,8 +291,10 @@ struct Symbol* unary_expression(struct UnaryExpression* node, struct Symbol** or
                 case 2:
                     test_referenceable(symbol);
                     symbol = load_symbol(symbol);
-                    symbol1 = new_symbol("", symbol->storage, 2, symbol->specifier, symbol->stars - 1, 0, symbol->length);
+                    symbol1 = new_symbol("", symbol->storage, 0, symbol->specifier, symbol->stars - 1, 0, symbol->length);
                     *orig_symbol = symbol1;
+                    if (symbol1->stars == 0)
+                        symbol1->specifier = 32;
                     symbol1->reference = symbol;
                     ADDSTRING("  ");
                     code_gen_symbol('%', symbol1);

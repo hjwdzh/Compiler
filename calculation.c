@@ -76,8 +76,10 @@ struct Symbol* additive_symbol(struct Symbol* symbol1, struct Symbol* symbol2, i
     symbol3 = new_symbol("", symbol2->storage, 2, symbol2->specifier, symbol2->stars, 0, symbol2->length);
     ADDSTRING("  ");
     code_gen_symbol('%', symbol3);
+    int isInteger = 1;
     if ((symbol3->specifier & (3 << 6)) != 0)
     {
+        isInteger = 0;
         ADDSTRING(" = f");
     }
     else
@@ -92,7 +94,7 @@ struct Symbol* additive_symbol(struct Symbol* symbol1, struct Symbol* symbol2, i
     {
         ADDSTRING("add ");
     }
-    code_gen_type_specifier(symbol3->specifier,1,symbol3->length, symbol3->storage);
+    code_gen_type_specifier(symbol3->specifier,isInteger,symbol3->length, symbol3->storage);
     ADDSTRING(" ");
     code_gen_symbol('%', symbol1);
     ADDSTRING(", ");

@@ -160,6 +160,7 @@ struct Symbol* test_add(struct Symbol** symbol1, struct Symbol** symbol2, int ty
         code_gen_symbol('%', *symbol2);
         ADDSTRING(", i64 ");
         code_gen_symbol('%', *symbol1);
+        ADDSTRING("\n");
         return symbol3;
     }
     return 0;
