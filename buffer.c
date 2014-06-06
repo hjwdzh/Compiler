@@ -7,6 +7,7 @@
 static char global_buffer[BUFFER_SIZE];
 static char* ptr_stack[20];
 static int ptr_top;
+char name1[30], name2[30];
 
 void initialize_buffer()
 {
@@ -29,8 +30,8 @@ void pop_buffer()
 
 void code_gen()
 {
-    freopen("test.ll", "w", stdout);
-    code_gen_with_header("test.c");
+    freopen(name2, "w", stdout);
+    code_gen_with_header(name1);
     code_gen_string();
     code_gen_global_symbol();
     printf("%s", global_buffer);

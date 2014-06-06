@@ -7,8 +7,19 @@
 
 #include "types.h"
 #include "symbol.h"
+#define WINDOWS_PLATFORM
+//#define MAC_OS_PLATFORM
+//#define LINUX_PLATFORM
 
-#define TARGET_TRIPLE "x86_64-apple-macosx10.8.0"
+#ifdef WINDOWS_PLATFORM
+	#define TARGET_TRIPLE "i686-pc-mingw32"
+#else
+	#ifdef MAC_OS_PLATFORM
+		#define TARGET_TRIPLE "x86-64-apple-macosx10.8.0"
+	#else
+		#define TARGET_TRIPLE "linux"
+	#endif
+#endif
 #define PTR_LENGTH 8
 #define PTR_LEN_TYPE "i64"
 #define ADDSTRING(a) {strcpy(g_ptr,a), g_ptr += strlen(a);}

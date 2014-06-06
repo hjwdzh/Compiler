@@ -12,6 +12,9 @@
 
 #include <stdio.h>
 
+extern char name1[30];
+extern char name2[30];
+
 void initialize_buffer();
 void code_gen();
 void push_buffer(char* buf);
